@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   Flame, Clock, Leaf, ShieldCheck, Star, MapPin, Phone, Mail,
@@ -108,7 +108,7 @@ function Index() {
                 {n.label}
               </a>
             ))}
-            <a href="#menu" className="btn-primary text-sm">Order Now <ArrowRight className="w-4 h-4" /></a>
+            <Link to="/order" className="btn-primary text-sm">Order Now <ArrowRight className="w-4 h-4" /></Link>
           </nav>
           <button
             className="md:hidden grid h-10 w-10 place-items-center rounded-full bg-[var(--cream)]/10 text-[var(--cream)]"
@@ -131,7 +131,7 @@ function Index() {
                   {n.label}
                 </a>
               ))}
-              <a href="#menu" onClick={() => setOpen(false)} className="btn-primary mt-2">Order Now</a>
+              <Link to="/order" onClick={() => setOpen(false)} className="btn-primary mt-2">Order Now</Link>
             </div>
           </div>
         )}
@@ -163,7 +163,7 @@ function Index() {
               Made fresh daily with premium ingredients. Hand-rolled wraps, sizzling burgers and loaded fries — built for cravings.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#menu" className="btn-primary">Order Now <ArrowRight className="w-4 h-4" /></a>
+              <Link to="/order" className="btn-primary">Order Now <ArrowRight className="w-4 h-4" /></Link>
               <a href="#menu" className="btn-outline">View Menu</a>
             </div>
             <div className="mt-10 flex flex-wrap items-center gap-6 text-[var(--cream)]/70 text-sm">
