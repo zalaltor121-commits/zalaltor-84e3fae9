@@ -11,7 +11,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { CartProvider } from "../lib/cart";
 
 function NotFoundComponent() {
   return (
@@ -78,10 +77,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "Wrap Station" },
+      { name: "author", content: "Zalaltor" },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Wrap Station" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:site_name", content: "Zalaltor" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "theme-color", content: "#0b0b18" },
     ],
     links: [
       {
@@ -99,7 +99,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap",
       },
     ],
   }),
@@ -128,10 +128,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-      </CartProvider>
+      {/* Required: nested routes render here. */}
+      <Outlet />
     </QueryClientProvider>
   );
 }

@@ -1,30 +1,37 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState, type ReactNode, type MouseEvent as ReactMouseEvent } from "react";
+import { motion, useMotionValue, useSpring, useTransform, useScroll, useInView, AnimatePresence } from "framer-motion";
 import {
-  Flame, Clock, Leaf, ShieldCheck, Star, MapPin, Phone, Mail,
-  Menu as MenuIcon, X, Instagram, Facebook, ArrowRight, Sparkles,
+  ArrowRight, ArrowUpRight, Sparkles, Layers, ShoppingBag, CalendarCheck,
+  Rocket, Bot, Wand2, Smartphone, Search, Zap, LifeBuoy, Code2,
+  Compass, ClipboardList, Palette, Cpu, Send, Mail, Phone, MessageCircle,
+  Star, Menu as MenuIcon, X, Check,
 } from "lucide-react";
-import hero from "@/assets/hero.jpg";
-import chickenWrap from "@/assets/chicken-wrap.jpg";
-import spicyWrap from "@/assets/spicy-wrap.jpg";
-import beefWrap from "@/assets/beef-wrap.jpg";
-import loadedFries from "@/assets/loaded-fries.jpg";
-import burger from "@/assets/burger.jpg";
-import clubSandwich from "@/assets/club-sandwich.jpg";
-import drinks from "@/assets/drinks.jpg";
-import interior from "@/assets/interior.jpg";
-import making from "@/assets/making.jpg";
+
+import turnerImg from "@/assets/portfolio/turner.png";
+import cramerImg from "@/assets/portfolio/cramer.png";
+import wrapImg from "@/assets/portfolio/wrapstation.png";
+import odeonImg from "@/assets/portfolio/odeon.png";
+import uppercutImg from "@/assets/portfolio/uppercut.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Wrap Station — Fresh Wraps. Bold Flavors." },
-      { name: "description", content: "Wrap Station serves fresh chicken & beef wraps, loaded fries, burgers, sandwiches and refreshing drinks — made daily with premium ingredients in Rawalpindi." },
-      { property: "og:title", content: "Wrap Station — Fresh Wraps. Bold Flavors." },
-      { property: "og:description", content: "Premium fast-casual wraps, burgers and loaded fries made fresh daily." },
+      { title: "Zalaltor — Websites That Turn Visitors Into Customers" },
+      {
+        name: "description",
+        content:
+          "Zalaltor is a premium web design agency crafting high-converting websites, e-commerce stores, booking systems and AI-driven digital experiences for ambitious businesses.",
+      },
+      { property: "og:title", content: "Zalaltor — Websites That Turn Visitors Into Customers" },
+      {
+        property: "og:description",
+        content:
+          "Custom websites, e-commerce, booking systems and AI automations designed to help businesses grow.",
+      },
       { property: "og:url", content: "/" },
-      { property: "og:image", content: hero },
-      { name: "twitter:image", content: hero },
+      { name: "twitter:title", content: "Zalaltor — Premium Web Agency" },
+      { name: "twitter:description", content: "Where Vision Becomes Digital Reality." },
     ],
     links: [{ rel: "canonical", href: "/" }],
     scripts: [
@@ -32,474 +39,1011 @@ export const Route = createFileRoute("/")({
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "Restaurant",
-          name: "Wrap Station",
-          servesCuisine: ["Fast Food", "Wraps", "Burgers"],
-          priceRange: "Rs 1–1,000",
-          telephone: "+92 328 3777553",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "Afghan house, main Commercial Market Rd, opposite Askari bank, B-Block, Satellite Town",
-            addressLocality: "Rawalpindi",
-            addressCountry: "PK",
-          },
-          aggregateRating: { "@type": "AggregateRating", ratingValue: "4.4", reviewCount: "681" },
-          openingHours: "Mo-Su 15:00-02:00",
+          "@type": "ProfessionalService",
+          name: "Zalaltor",
+          description:
+            "Premium web design agency building high-converting websites, e-commerce, booking systems and AI automations.",
+          email: "murtazadooz6@gmail.com",
+          telephone: "+923705104014",
+          areaServed: "Worldwide",
+          slogan: "Where Vision Becomes Digital Reality.",
         }),
       },
     ],
   }),
-  component: Index,
+  component: HomePage,
 });
 
-const menu = [
-  { name: "Chicken Wrap", desc: "Grilled chicken, fresh greens, signature creamy sauce in a warm tortilla.", price: "Rs 450", img: chickenWrap, tag: "Bestseller" },
-  { name: "Spicy Chicken Wrap", desc: "Fiery marinated chicken, chili flakes, peppers — for the bold.", price: "Rs 490", img: spicyWrap, tag: "Hot" },
-  { name: "Beef Wrap", desc: "Tender beef strips, caramelized onions and melted cheese.", price: "Rs 550", img: beefWrap },
-  { name: "Loaded Fries", desc: "Crispy fries piled with cheese, chicken, jalapeños and sauces.", price: "Rs 520", img: loadedFries, tag: "Sharing" },
-  { name: "Classic Burger", desc: "Juicy beef patty, cheddar, lettuce, tomato on a toasted bun.", price: "Rs 600", img: burger },
-  { name: "Club Sandwich", desc: "Triple-decker with chicken, crispy bacon, lettuce and tomato.", price: "Rs 580", img: clubSandwich },
-  { name: "Fresh Drinks", desc: "Mint lemonade, berry fizz and classic lemon — ice cold.", price: "Rs 180", img: drinks },
-];
+/* ============================================================
+   PRIMITIVES
+   ============================================================ */
 
-const reviews = [
-  { name: "Qasim Ali Zaidi", role: "Local Guide", text: "Amazing food and speedy delivery! Burgers were juicy and flavorful. Friendly staff and cozy ambiance — highly recommend.", stars: 5 },
-  { name: "Saqib Mehmood", role: "Customer", text: "Visited the Commercial branch — the Value Box Deal is incredible. Staff is polite and humble, management is great.", stars: 5 },
-  { name: "Ayesha Khan", role: "Customer", text: "The spicy chicken wrap is unreal. Fresh, generous portions, and the sauce is addictive. My new go-to spot.", stars: 5 },
-  { name: "Hamza R.", role: "Customer", text: "Loaded fries are easily the best in Rawalpindi. Cheesy, crunchy and perfectly seasoned every time.", stars: 4 },
-];
-
-const nav = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Menu", href: "#menu" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Reviews", href: "#reviews" },
-  { label: "Contact", href: "#contact" },
-];
-
-function Index() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-
+function useMousePosition() {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    const handler = (e: MouseEvent) => {
+      x.set(e.clientX);
+      y.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handler);
+    return () => window.removeEventListener("mousemove", handler);
+  }, [x, y]);
+  return { x, y };
+}
+
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  return (
+    <motion.div
+      style={{ scaleX, transformOrigin: "0% 50%" }}
+      className="fixed left-0 right-0 top-0 z-[60] h-[3px] bg-gradient-to-r from-[var(--brand)] via-[var(--accent2)] to-[var(--brand)]"
+    />
+  );
+}
+
+function AuroraBackground() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 opacity-70 [background:radial-gradient(60%_50%_at_20%_20%,color-mix(in_oklab,var(--brand)_35%,transparent)_0%,transparent_60%),radial-gradient(50%_40%_at_80%_10%,color-mix(in_oklab,var(--accent2)_35%,transparent)_0%,transparent_60%),radial-gradient(60%_50%_at_60%_80%,color-mix(in_oklab,var(--brand)_25%,transparent)_0%,transparent_60%)]" />
+      <motion.div
+        aria-hidden
+        className="absolute -top-40 left-1/2 h-[70vh] w-[120vw] -translate-x-1/2 blur-3xl"
+        style={{
+          background:
+            "conic-gradient(from 90deg at 50% 50%, color-mix(in oklab, var(--brand) 40%, transparent), color-mix(in oklab, var(--accent2) 30%, transparent), color-mix(in oklab, var(--brand) 40%, transparent))",
+          opacity: 0.35,
+        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+      />
+      <div className="absolute inset-0 [background-image:linear-gradient(color-mix(in_oklab,var(--foreground)_6%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--foreground)_6%,transparent)_1px,transparent_1px)] [background-size:52px_52px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_75%)]" />
+    </div>
+  );
+}
+
+function Spotlight() {
+  const { x, y } = useMousePosition();
+  const bx = useSpring(x, { stiffness: 60, damping: 20 });
+  const by = useSpring(y, { stiffness: 60, damping: 20 });
+  const bg = useTransform([bx, by], ([lx, ly]: number[]) =>
+    `radial-gradient(600px circle at ${lx}px ${ly}px, color-mix(in oklab, var(--brand) 22%, transparent), transparent 70%)`
+  );
+  return (
+    <motion.div
+      aria-hidden
+      style={{ background: bg as unknown as string }}
+      className="pointer-events-none fixed inset-0 z-30 mix-blend-screen"
+    />
+  );
+}
+
+function FloatingOrbs() {
+  const orbs = [
+    { size: 220, x: "8%", y: "20%", delay: 0, color: "var(--brand)" },
+    { size: 160, x: "80%", y: "30%", delay: 1.5, color: "var(--accent2)" },
+    { size: 120, x: "70%", y: "75%", delay: 0.8, color: "var(--brand)" },
+    { size: 90, x: "15%", y: "70%", delay: 2.2, color: "var(--accent2)" },
+  ];
+  return (
+    <div className="pointer-events-none absolute inset-0">
+      {orbs.map((o, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full blur-3xl"
+          style={{
+            width: o.size,
+            height: o.size,
+            left: o.x,
+            top: o.y,
+            background: `radial-gradient(circle, color-mix(in oklab, ${o.color} 60%, transparent), transparent 70%)`,
+          }}
+          animate={{ y: [0, -30, 0], x: [0, 20, 0] }}
+          transition={{ duration: 8 + i * 2, repeat: Infinity, delay: o.delay, ease: "easeInOut" }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function AnimatedWords({ text, className = "", delay = 0 }: { text: string; className?: string; delay?: number }) {
+  const words = text.split(" ");
+  return (
+    <span className={className}>
+      {words.map((w, i) => (
+        <span key={i} className="inline-block overflow-hidden pb-[0.15em] align-bottom">
+          <motion.span
+            className="inline-block"
+            initial={{ y: "110%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.9, delay: delay + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {w}
+            {i < words.length - 1 && "\u00A0"}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function Reveal({
+  children,
+  y = 30,
+  delay = 0,
+  className = "",
+}: {
+  children: ReactNode;
+  y?: number;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function MagneticButton({
+  children,
+  href,
+  variant = "primary",
+  className = "",
+  onClick,
+}: {
+  children: ReactNode;
+  href?: string;
+  variant?: "primary" | "outline";
+  className?: string;
+  onClick?: () => void;
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 200, damping: 15 });
+  const sy = useSpring(y, { stiffness: 200, damping: 15 });
+
+  const onMove = (e: ReactMouseEvent<HTMLAnchorElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    x.set((e.clientX - (r.left + r.width / 2)) * 0.35);
+    y.set((e.clientY - (r.top + r.height / 2)) * 0.35);
+  };
+  const onLeave = () => { x.set(0); y.set(0); };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* NAV */}
-      <header
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-          scrolled ? "bg-[var(--ink)]/90 backdrop-blur-md shadow-lg" : "bg-transparent"
-        }`}
-      >
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 h-16 sm:h-20 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
-          <a href="#home" className="flex min-w-0 items-center gap-2">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--brand)] to-[var(--ember)] text-[var(--brand-foreground)] font-display text-lg">W</span>
-            <span className="truncate font-display text-2xl sm:text-3xl text-[var(--cream)]">Wrap Station</span>
-          </a>
-          <nav className="hidden md:flex items-center gap-7">
-            {nav.map((n) => (
-              <a key={n.href} href={n.href} className="text-sm font-semibold text-[var(--cream)]/85 hover:text-[var(--ember)] transition-colors">
-                {n.label}
-              </a>
-            ))}
-            <Link to="/order" className="btn-primary text-sm">Order Now <ArrowRight className="w-4 h-4" /></Link>
-          </nav>
-          <button
-            className="md:hidden grid h-10 w-10 place-items-center rounded-full bg-[var(--cream)]/10 text-[var(--cream)]"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
-          </button>
-        </div>
-        {open && (
-          <div className="md:hidden bg-[var(--ink)]/95 backdrop-blur-md border-t border-white/10 animate-fade-in">
-            <div className="px-5 py-4 flex flex-col gap-3">
-              {nav.map((n) => (
-                <a
-                  key={n.href}
-                  href={n.href}
-                  onClick={() => setOpen(false)}
-                  className="text-[var(--cream)]/90 py-2 font-semibold"
-                >
-                  {n.label}
-                </a>
-              ))}
-              <Link to="/order" onClick={() => setOpen(false)} className="btn-primary mt-2">Order Now</Link>
-            </div>
-          </div>
-        )}
-      </header>
+    <motion.a
+      ref={ref}
+      href={href}
+      onClick={onClick}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ x: sx, y: sy }}
+      className={`${variant === "primary" ? "btn-primary" : "btn-outline"} ${className}`}
+    >
+      {children}
+    </motion.a>
+  );
+}
 
-      {/* HERO */}
-      <section id="home" className="relative min-h-[100svh] flex items-center overflow-hidden">
-        <img
-          src={hero}
-          alt="Fresh chicken wrap with grilled chicken and creamy sauce"
-          className="absolute inset-0 w-full h-full object-cover"
-          width={1600}
-          height={1200}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--ink)]/95 via-[var(--ink)]/70 to-[var(--ink)]/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink)] via-transparent to-transparent" />
-        <div className="relative mx-auto max-w-7xl px-5 sm:px-8 pt-28 pb-20 sm:py-32 w-full">
-          <div className="max-w-2xl animate-fade-in">
-            <span className="chip bg-[var(--ember)]/20 text-[var(--ember)]">
-              <Sparkles className="w-3.5 h-3.5" /> Rawalpindi · 4.4 ★ (681 reviews)
-            </span>
-            <h1 className="mt-5 font-display text-[clamp(3rem,9vw,7rem)] leading-[0.9] text-[var(--cream)]">
-              Fresh Wraps. <br />
-              <span className="bg-gradient-to-r from-[var(--ember)] to-[var(--brand)] bg-clip-text text-transparent">
-                Bold Flavors.
-              </span>
-            </h1>
-            <p className="mt-6 max-w-lg text-base sm:text-lg text-[var(--cream)]/80">
-              Made fresh daily with premium ingredients. Hand-rolled wraps, sizzling burgers and loaded fries — built for cravings.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/order" className="btn-primary">Order Now <ArrowRight className="w-4 h-4" /></Link>
-              <a href="#menu" className="btn-outline">View Menu</a>
-            </div>
-            <div className="mt-10 flex flex-wrap items-center gap-6 text-[var(--cream)]/70 text-sm">
-              <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-[var(--ember)]" /> Open 3 PM – Late</div>
-              <div className="flex items-center gap-2"><Leaf className="w-4 h-4 text-[var(--ember)]" /> 100% Fresh Daily</div>
-              <div className="flex items-center gap-2"><Flame className="w-4 h-4 text-[var(--ember)]" /> Hand-rolled</div>
-            </div>
-          </div>
-        </div>
-      </section>
+function TiltCard({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 150, damping: 15 });
+  const sry = useSpring(ry, { stiffness: 150, damping: 15 });
 
-      {/* ABOUT */}
-      <section id="about" className="py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 grid gap-12 lg:grid-cols-2 lg:items-center">
-          <div className="relative">
-            <img
-              src={making}
-              alt="Chef wrapping a fresh wrap by hand"
-              loading="lazy"
-              width={1024}
-              height={1024}
-              className="rounded-3xl shadow-2xl w-full object-cover aspect-[4/5]"
-            />
-            <div className="absolute -bottom-6 -right-4 sm:-right-8 bg-[var(--ink)] text-[var(--cream)] rounded-2xl p-5 sm:p-6 shadow-xl max-w-[15rem]">
-              <div className="font-display text-4xl text-[var(--ember)]">10+</div>
-              <div className="text-sm opacity-80 mt-1">years of rolling Rawalpindi's favorite wraps</div>
-            </div>
-          </div>
-          <div>
-            <span className="chip">Our Story</span>
-            <h2 className="mt-4 font-display text-4xl sm:text-6xl leading-tight">
-              Crafted with fire, <span className="text-[var(--brand)]">served with love.</span>
-            </h2>
-            <p className="mt-5 text-muted-foreground text-lg leading-relaxed">
-              Wrap Station started with a simple idea — make the kind of wraps you'd cross town for. Today, from our Commercial Market kitchen, we hand-roll every order with marinated meats, fresh produce, and sauces we make in-house.
-            </p>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
-              No shortcuts. No yesterday's prep. Just bold flavors, quick service, and food we'd proudly feed our own family.
-            </p>
-            <div className="mt-8 grid grid-cols-3 gap-4">
-              {[
-                { k: "681+", v: "Reviews" },
-                { k: "4.4★", v: "Rated" },
-                { k: "50k+", v: "Wraps served" },
-              ].map((s) => (
-                <div key={s.v} className="rounded-2xl bg-card p-4 text-center shadow-sm border">
-                  <div className="font-display text-3xl text-[var(--brand)]">{s.k}</div>
-                  <div className="text-xs text-muted-foreground mt-1 uppercase tracking-wider">{s.v}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+  const onMove = (e: ReactMouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    ry.set(px * 12);
+    rx.set(-py * 12);
+  };
+  const onLeave = () => { rx.set(0); ry.set(0); };
 
-      {/* MENU */}
-      <section id="menu" className="py-20 sm:py-28 bg-[var(--ink)] text-[var(--cream)] relative overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] rounded-full bg-[var(--brand)]/20 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-[28rem] h-[28rem] rounded-full bg-[var(--ember)]/20 blur-3xl" />
-        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-            <div>
-              <span className="chip bg-[var(--ember)]/20 text-[var(--ember)]">Popular Menu</span>
-              <h2 className="mt-4 font-display text-4xl sm:text-6xl leading-tight">
-                The fan favorites
-              </h2>
-            </div>
-            <p className="max-w-md text-[var(--cream)]/70">
-              Every item below is hand-prepared to order. Prices may vary at the counter.
-            </p>
-          </div>
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ rotateX: srx, rotateY: sry, transformPerspective: 1200 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {menu.map((item, i) => (
-              <article
-                key={item.name}
-                className="group card-hover rounded-3xl overflow-hidden bg-[var(--cream)] text-[var(--ink)] shadow-xl"
-                style={{ animation: `fade-in 0.6s ease-out both`, animationDelay: `${i * 60}ms` }}
-              >
-                <div className="relative overflow-hidden aspect-[4/3]">
-                  <img
-                    src={item.img}
-                    alt={item.name}
-                    loading="lazy"
-                    width={1024}
-                    height={768}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  {item.tag && (
-                    <span className="absolute top-3 left-3 chip bg-[var(--brand)] text-[var(--brand-foreground)]">
-                      {item.tag}
-                    </span>
-                  )}
-                </div>
-                <div className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="font-display text-2xl">{item.name}</h3>
-                    <span className="font-display text-2xl text-[var(--brand)] shrink-0">{item.price}</span>
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* WHY US */}
-      <section className="py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="max-w-2xl">
-            <span className="chip">Why Choose Us</span>
-            <h2 className="mt-4 font-display text-4xl sm:text-6xl leading-tight">
-              Quality you can <span className="text-[var(--brand)]">taste.</span>
-            </h2>
-          </div>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: Leaf, title: "Fresh Ingredients", text: "Locally sourced produce, marinated daily." },
-              { icon: Flame, title: "Fast Service", text: "Hot, hand-rolled and out the door in minutes." },
-              { icon: Star, title: "Affordable Prices", text: "Premium taste without the premium tag." },
-              { icon: ShieldCheck, title: "Hygienic Kitchen", text: "Clean prep stations, gloved handling, every order." },
-            ].map((f) => (
-              <div key={f.title} className="card-hover rounded-3xl bg-card border p-7 shadow-sm">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[var(--brand)] to-[var(--ember)] text-[var(--brand-foreground)]">
-                  <f.icon className="w-6 h-6" />
-                </div>
-                <h3 className="mt-5 font-display text-2xl">{f.title}</h3>
-                <p className="mt-2 text-muted-foreground text-sm leading-relaxed">{f.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* GALLERY */}
-      <section id="gallery" className="py-20 sm:py-28 bg-secondary">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-            <div>
-              <span className="chip">Gallery</span>
-              <h2 className="mt-4 font-display text-4xl sm:text-6xl leading-tight">A taste of the vibe</h2>
-            </div>
-          </div>
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            {[
-              { src: chickenWrap, cls: "row-span-2 aspect-[3/4]" },
-              { src: loadedFries, cls: "aspect-square" },
-              { src: burger, cls: "aspect-square" },
-              { src: interior, cls: "col-span-2 aspect-[2/1]" },
-              { src: beefWrap, cls: "aspect-square" },
-              { src: drinks, cls: "aspect-square" },
-              { src: spicyWrap, cls: "aspect-square" },
-              { src: clubSandwich, cls: "aspect-square" },
-            ].map((g, i) => (
-              <div key={i} className={`overflow-hidden rounded-2xl group ${g.cls}`}>
-                <img
-                  src={g.src}
-                  alt="Wrap Station gallery"
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* REVIEWS */}
-      <section id="reviews" className="py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="max-w-2xl">
-            <span className="chip">Customer Reviews</span>
-            <h2 className="mt-4 font-display text-4xl sm:text-6xl leading-tight">
-              Loved by <span className="text-[var(--brand)]">681+</span> diners
-            </h2>
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {reviews.map((r) => (
-              <figure key={r.name} className="card-hover rounded-3xl bg-card border p-6 shadow-sm flex flex-col">
-                <div className="flex gap-1 text-[var(--ember)]">
-                  {Array.from({ length: r.stars }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-                <blockquote className="mt-4 text-sm leading-relaxed text-foreground/85 flex-1">
-                  “{r.text}”
-                </blockquote>
-                <figcaption className="mt-5 flex items-center gap-3 pt-4 border-t">
-                  <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-[var(--brand)] to-[var(--ember)] text-[var(--brand-foreground)] font-bold">
-                    {r.name.charAt(0)}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-semibold truncate">{r.name}</div>
-                    <div className="text-xs text-muted-foreground">{r.role}</div>
-                  </div>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CONTACT */}
-      <section id="contact" className="py-20 sm:py-28 bg-[var(--ink)] text-[var(--cream)]">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 grid gap-12 lg:grid-cols-2">
-          <div>
-            <span className="chip bg-[var(--ember)]/20 text-[var(--ember)]">Visit Us</span>
-            <h2 className="mt-4 font-display text-4xl sm:text-6xl leading-tight">Come hungry. Leave happy.</h2>
-            <p className="mt-4 text-[var(--cream)]/75 max-w-md">
-              Drop in for dine-in, takeout or no-contact delivery. We're on Commercial Market Road, opposite Askari Bank.
-            </p>
-
-            <div className="mt-8 space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--brand)]/20 text-[var(--ember)]">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div className="min-w-0">
-                  <div className="font-semibold">Address</div>
-                  <div className="text-[var(--cream)]/70 text-sm">Afghan House, Commercial Market Rd, opposite Askari Bank, B-Block Satellite Town, Rawalpindi</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--brand)]/20 text-[var(--ember)]">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="font-semibold">Phone</div>
-                  <a href="tel:+923283777553" className="text-[var(--cream)]/70 text-sm hover:text-[var(--ember)]">+92 328 3777553</a>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--brand)]/20 text-[var(--ember)]">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="font-semibold">Opening Hours</div>
-                  <div className="text-[var(--cream)]/70 text-sm">Daily · 3:00 PM – 2:00 AM</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 overflow-hidden rounded-2xl border border-white/10">
-              <iframe
-                title="Wrap Station location"
-                src="https://www.google.com/maps?q=Wrap+Station+Commercial+Market+Rawalpindi&output=embed"
-                className="w-full h-64"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-          </div>
-
-          <form
-            className="rounded-3xl bg-[var(--cream)] text-[var(--ink)] p-6 sm:p-8 shadow-2xl"
-            onSubmit={(e) => {
-              e.preventDefault();
-              alert("Thanks! We'll be in touch shortly.");
-            }}
-          >
-            <h3 className="font-display text-3xl">Send us a message</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Questions, catering, or feedback — we read every one.</p>
-            <div className="mt-6 grid gap-4">
-              <label className="grid gap-1.5">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Name</span>
-                <input required className="rounded-xl border bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--brand)]" placeholder="Your name" />
-              </label>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="grid gap-1.5">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email</span>
-                  <input required type="email" className="rounded-xl border bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--brand)]" placeholder="you@email.com" />
-                </label>
-                <label className="grid gap-1.5">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Phone</span>
-                  <input className="rounded-xl border bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--brand)]" placeholder="03xx xxxxxxx" />
-                </label>
-              </div>
-              <label className="grid gap-1.5">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Message</span>
-                <textarea required rows={5} className="rounded-xl border bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--brand)]" placeholder="How can we help?" />
-              </label>
-              <button type="submit" className="btn-primary mt-2">Send Message <ArrowRight className="w-4 h-4" /></button>
-            </div>
-          </form>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="bg-[var(--ink)] text-[var(--cream)]/80 border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 py-12 grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2">
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[var(--brand)] to-[var(--ember)] text-[var(--brand-foreground)] font-display text-lg">W</span>
-              <span className="font-display text-2xl text-[var(--cream)]">Wrap Station</span>
-            </div>
-            <p className="mt-4 max-w-sm text-sm">
-              Fresh wraps, bold flavors. Hand-rolled in Rawalpindi since day one.
-            </p>
-            <div className="mt-5 flex items-center gap-3">
-              <a href="#" aria-label="Instagram" className="grid h-10 w-10 place-items-center rounded-full bg-white/5 hover:bg-[var(--brand)] transition-colors">
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" aria-label="Facebook" className="grid h-10 w-10 place-items-center rounded-full bg-white/5 hover:bg-[var(--brand)] transition-colors">
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a href="mailto:hello@wrapstation.pk" aria-label="Email" className="grid h-10 w-10 place-items-center rounded-full bg-white/5 hover:bg-[var(--brand)] transition-colors">
-                <Mail className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-          <div>
-            <div className="font-display text-lg text-[var(--cream)]">Explore</div>
-            <ul className="mt-4 space-y-2 text-sm">
-              {nav.map((n) => (
-                <li key={n.href}><a href={n.href} className="hover:text-[var(--ember)]">{n.label}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="font-display text-lg text-[var(--cream)]">Visit</div>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li>Commercial Market Rd</li>
-              <li>Satellite Town, Rawalpindi</li>
-              <li>+92 328 3777553</li>
-              <li>Daily 3 PM – 2 AM</li>
-            </ul>
-          </div>
-        </div>
-        <div className="border-t border-white/10">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 py-5 flex flex-wrap items-center justify-between gap-3 text-xs text-[var(--cream)]/60">
-            <div>© {new Date().getFullYear()} Wrap Station. All rights reserved.</div>
-            <div>Crafted with fire 🔥 in Rawalpindi.</div>
-          </div>
-        </div>
-      </footer>
+function CardSpotlight({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(-200);
+  const my = useMotionValue(-200);
+  const bg = useTransform([mx, my], ([lx, ly]: number[]) =>
+    `radial-gradient(320px circle at ${lx}px ${ly}px, color-mix(in oklab, var(--brand) 25%, transparent), transparent 60%)`
+  );
+  const onMove = (e: ReactMouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set(e.clientX - r.left);
+    my.set(e.clientY - r.top);
+  };
+  return (
+    <div ref={ref} onMouseMove={onMove} className={`group relative overflow-hidden ${className}`}>
+      <motion.div
+        style={{ background: bg as unknown as string }}
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      />
+      {children}
     </div>
+  );
+}
+
+function Counter({ to, suffix = "", duration = 2 }: { to: number; suffix?: string; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min((t - start) / (duration * 1000), 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setVal(Math.round(to * eased));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to, duration]);
+  return (
+    <span ref={ref}>
+      {val.toLocaleString()}
+      {suffix}
+    </span>
+  );
+}
+
+/* ============================================================
+   DATA
+   ============================================================ */
+
+type Project = {
+  name: string;
+  industry: string;
+  description: string;
+  features: string[];
+  tech: string[];
+  url: string;
+  image: string;
+};
+
+const PROJECTS: Project[] = [
+  {
+    name: "Turner Law Offices",
+    industry: "Law Firm — Iowa",
+    description:
+      "A trust-first legal presence with cinematic hero, animated practice areas and a conversion-optimized consultation funnel.",
+    features: ["Consultation Funnel", "Practice Areas", "Google Reviews", "Local SEO"],
+    tech: ["React", "TypeScript", "Tailwind", "Framer Motion"],
+    url: "https://sparkling-pastelito-4f1b1e.netlify.app/",
+    image: turnerImg,
+  },
+  {
+    name: "Cramer Law Services",
+    industry: "Law Firm — Dallas",
+    description:
+      "Editorial, high-conviction brand system with case-results storytelling, attorney profiles and a premium intake flow.",
+    features: ["Case Results", "Attorney Profiles", "Intake Flow", "FAQ System"],
+    tech: ["React", "TypeScript", "Tailwind", "GSAP"],
+    url: "https://cramerlawservices.lovable.app",
+    image: cramerImg,
+  },
+  {
+    name: "Wrap Station",
+    industry: "Restaurant — Rawalpindi",
+    description:
+      "A bold fast-casual brand with interactive menu, WhatsApp ordering and a mobile-first cart built for peak dinner traffic.",
+    features: ["Online Ordering", "Interactive Menu", "WhatsApp Checkout", "Cart System"],
+    tech: ["React", "TypeScript", "Tailwind", "Framer Motion"],
+    url: "https://animated-beijinho-1a81da.netlify.app",
+    image: wrapImg,
+  },
+  {
+    name: "Odeon Vapes",
+    industry: "Retail — Islamabad",
+    description:
+      "A neon-glass storefront with product showcases, flavor library and a one-tap call-to-store lead flow.",
+    features: ["Product Showcase", "Flavor Library", "Store Locator", "Click-to-Call"],
+    tech: ["React", "TypeScript", "Tailwind", "Motion"],
+    url: "https://lighthearted-pithivier-d9f887.netlify.app/",
+    image: odeonImg,
+  },
+  {
+    name: "The UpperCut Barber",
+    industry: "Barbershop — Florida",
+    description:
+      "Warm editorial branding meets a frictionless booking experience — built to convert walk-ins into regulars.",
+    features: ["Online Booking", "Barber Profiles", "Gallery", "Reviews"],
+    tech: ["React", "TypeScript", "Tailwind", "Framer Motion"],
+    url: "https://chic-frangollo-52fe15.netlify.app/",
+    image: uppercutImg,
+  },
+];
+
+const SERVICES = [
+  { icon: Layers, title: "Business Websites", desc: "Custom marketing sites engineered to build trust and generate qualified leads." },
+  { icon: ShoppingBag, title: "E-commerce Stores", desc: "Conversion-focused online stores with fast checkout and elegant product storytelling." },
+  { icon: CalendarCheck, title: "Booking Systems", desc: "Appointment and reservation platforms that fill your calendar on autopilot." },
+  { icon: Rocket, title: "Landing Pages", desc: "High-converting campaign pages built to turn ad spend into paying customers." },
+  { icon: Bot, title: "AI Automations", desc: "AI chat, lead qualifiers and workflow automations that scale your operations." },
+  { icon: Wand2, title: "Website Redesigns", desc: "Modernize your outdated site into a premium, mobile-first digital experience." },
+];
+
+const WHY = [
+  { icon: Palette, title: "Modern Design", desc: "Award-quality visuals crafted with intention — not templates." },
+  { icon: Smartphone, title: "Mobile Optimization", desc: "Pixel-perfect experiences on every device your customers use." },
+  { icon: Search, title: "SEO Optimization", desc: "Built to rank — structured data, semantic HTML, performance-first." },
+  { icon: Zap, title: "Fast Performance", desc: "Sub-second loads. Optimized assets. Best-in-class Core Web Vitals." },
+  { icon: LifeBuoy, title: "Reliable Support", desc: "Real humans, real fast. We're partners, not vendors." },
+  { icon: Code2, title: "Professional Development", desc: "Clean, maintainable code you can scale for years, not months." },
+];
+
+const PROCESS = [
+  { icon: Compass, title: "Discovery", desc: "We dive deep into your business, goals and audience." },
+  { icon: ClipboardList, title: "Planning", desc: "A precise strategy, sitemap and conversion architecture." },
+  { icon: Palette, title: "Design", desc: "Premium visual direction, refined until it feels inevitable." },
+  { icon: Cpu, title: "Development", desc: "Clean, performant code — animated with craftsmanship." },
+  { icon: Rocket, title: "Launch", desc: "We ship, measure and iterate — long after go-live." },
+];
+
+const TESTIMONIALS = [
+  { name: "Ahmed R.", role: "Founder, Retail Brand", quote: "Zalaltor delivered a site that outperformed our previous version 3x in conversions. Truly world-class." },
+  { name: "Sarah L.", role: "Marketing Director", quote: "From strategy to launch, every detail was considered. Our brand finally looks the way we always felt." },
+  { name: "James O.", role: "Restaurant Owner", quote: "Orders started coming in within days of launch. The design is stunning and the ordering flow just works." },
+  { name: "Priya K.", role: "Legal Partner", quote: "Professional, fast and creative. Our new site changed how clients perceive our firm." },
+  { name: "Marco T.", role: "E-commerce Founder", quote: "The best agency experience I've had. Our storefront finally matches the quality of our products." },
+  { name: "Ayesha M.", role: "Studio Owner", quote: "Zalaltor understood our vision immediately and elevated it. Bookings are up dramatically." },
+];
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+
+function HomePage() {
+  return (
+    <div className="relative min-h-screen bg-background text-foreground font-sans overflow-x-hidden">
+      <ScrollProgress />
+      <Spotlight />
+      <Nav />
+      <Hero />
+      <Portfolio />
+      <Services />
+      <WhyUs />
+      <Process />
+      <Testimonials />
+      <Contact />
+      <Footer />
+    </div>
+  );
+}
+
+/* ---------------- NAV ---------------- */
+
+function Nav() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 20);
+    h();
+    window.addEventListener("scroll", h, { passive: true });
+    return () => window.removeEventListener("scroll", h);
+  }, []);
+  const links = [
+    { href: "#work", label: "Work" },
+    { href: "#services", label: "Services" },
+    { href: "#process", label: "Process" },
+    { href: "#testimonials", label: "Clients" },
+    { href: "#contact", label: "Contact" },
+  ];
+  return (
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className={`fixed inset-x-0 top-4 z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-3 transition-all duration-300 md:top-6 md:px-6 ${scrolled ? "glass shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)]" : "bg-transparent"}`}
+    >
+      <a href="#top" className="group flex items-center gap-2">
+        <div className="relative h-8 w-8 overflow-hidden rounded-lg bg-gradient-to-br from-[var(--brand)] to-[var(--accent2)]">
+          <div className="absolute inset-0 flex items-center justify-center font-display text-sm font-bold text-[var(--ink)]">Z</div>
+        </div>
+        <span className="font-display text-lg font-semibold tracking-wide">Zalaltor</span>
+      </a>
+      <nav className="hidden items-center gap-1 md:flex">
+        {links.map((l) => (
+          <a
+            key={l.href}
+            href={l.href}
+            className="relative rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <span className="relative z-10">{l.label}</span>
+            <span className="absolute inset-0 rounded-full bg-white/0 transition-colors hover:bg-white/5" />
+          </a>
+        ))}
+      </nav>
+      <div className="hidden md:block">
+        <a href="#contact" className="btn-primary text-sm">Start a Project <ArrowRight className="h-4 w-4" /></a>
+      </div>
+      <button
+        aria-label="Toggle menu"
+        onClick={() => setOpen((v) => !v)}
+        className="rounded-full border border-white/10 p-2 md:hidden"
+      >
+        {open ? <X className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="glass absolute left-4 right-4 top-full mt-3 flex flex-col gap-1 rounded-2xl p-3 md:hidden"
+          >
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="rounded-xl px-4 py-3 text-sm text-foreground hover:bg-white/5"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a href="#contact" onClick={() => setOpen(false)} className="btn-primary mt-2 text-sm">
+              Start a Project <ArrowRight className="h-4 w-4" />
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
+  );
+}
+
+/* ---------------- HERO ---------------- */
+
+function Hero() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  return (
+    <section id="top" ref={ref} className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden pt-32">
+      <AuroraBackground />
+      <FloatingOrbs />
+      <motion.div style={{ y, opacity }} className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground backdrop-blur"
+        >
+          <Sparkles className="h-3.5 w-3.5 text-[var(--brand)]" />
+          Where Vision Becomes Digital Reality
+        </motion.div>
+
+        <h1 className="text-gradient font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl lg:text-[5.5rem]">
+          <AnimatedWords text="Websites That Turn" />
+          <br />
+          <AnimatedWords text="Visitors Into Customers" delay={0.35} />
+        </h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.8 }}
+          className="mx-auto mt-8 max-w-2xl text-base text-muted-foreground sm:text-lg"
+        >
+          Custom websites, e-commerce stores, booking systems and digital experiences
+          designed to help ambitious businesses grow.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.3, duration: 0.8 }}
+          className="mt-10 flex flex-wrap items-center justify-center gap-3"
+        >
+          <MagneticButton href="#work" variant="primary">
+            View Our Work <ArrowRight className="h-4 w-4" />
+          </MagneticButton>
+          <MagneticButton href="#contact" variant="outline">
+            Book a Consultation
+          </MagneticButton>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.6, duration: 1 }}
+          className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs uppercase tracking-[0.25em] text-muted-foreground"
+        >
+          <span>Trusted by ambitious brands</span>
+          <span className="opacity-40">•</span>
+          <span>Law · Retail · Hospitality · SaaS</span>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-muted-foreground"
+      >
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-2"
+        >
+          <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+          <div className="h-10 w-[1px] bg-gradient-to-b from-[var(--brand)] to-transparent" />
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+/* ---------------- PORTFOLIO ---------------- */
+
+function Portfolio() {
+  return (
+    <section id="work" className="relative py-28 md:py-40">
+      <div className="mx-auto max-w-7xl px-6">
+        <Reveal className="mb-16 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <div className="chip mb-4">Featured Work</div>
+            <h2 className="font-display text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+              <span className="text-gradient">Selected projects</span>
+              <br />
+              built to convert.
+            </h2>
+          </div>
+          <p className="max-w-md text-muted-foreground">
+            A curated look at recent work — every project engineered end-to-end
+            for performance, brand, and measurable business results.
+          </p>
+        </Reveal>
+
+        <div className="space-y-24 md:space-y-32">
+          {PROJECTS.map((p, i) => (
+            <ProjectRow key={p.name} project={p} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProjectRow({ project, index }: { project: Project; index: number }) {
+  const reverse = index % 2 === 1;
+  return (
+    <Reveal>
+      <div className={`grid gap-10 md:grid-cols-12 md:items-center ${reverse ? "md:[direction:rtl]" : ""}`}>
+        <div className="md:col-span-7 md:[direction:ltr]">
+          <TiltCard className="group relative">
+            <CardSpotlight className="relative overflow-hidden rounded-3xl border border-white/10 bg-[var(--surface)] p-2 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.8)]">
+              <div className="relative overflow-hidden rounded-2xl">
+                <div className="flex items-center gap-1.5 border-b border-white/5 bg-black/30 px-4 py-2.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
+                  <span className="ml-3 truncate text-[11px] text-muted-foreground">{new URL(project.url).host}</span>
+                </div>
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <motion.img
+                    src={project.image}
+                    alt={`${project.name} website preview`}
+                    loading="lazy"
+                    className="h-full w-full object-cover object-top"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                </div>
+              </div>
+            </CardSpotlight>
+          </TiltCard>
+        </div>
+
+        <div className="md:col-span-5 md:[direction:ltr]">
+          <div className="chip mb-4">{project.industry}</div>
+          <h3 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{project.name}</h3>
+          <p className="mt-4 text-muted-foreground">{project.description}</p>
+
+          <ul className="mt-6 grid grid-cols-2 gap-2">
+            {project.features.map((f) => (
+              <li key={f} className="flex items-center gap-2 text-sm">
+                <Check className="h-4 w-4 text-[var(--brand)]" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {project.tech.map((t) => (
+              <span key={t} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-wider text-muted-foreground">
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-8">
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium transition-colors hover:border-[var(--brand)]/50 hover:bg-white/10"
+            >
+              Visit Live Site
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+/* ---------------- SERVICES ---------------- */
+
+function Services() {
+  return (
+    <section id="services" className="relative py-28 md:py-40">
+      <div className="pointer-events-none absolute inset-0 [background:radial-gradient(50%_40%_at_50%_0%,color-mix(in_oklab,var(--brand)_15%,transparent),transparent_70%)]" />
+      <div className="relative mx-auto max-w-7xl px-6">
+        <Reveal className="mx-auto mb-16 max-w-2xl text-center">
+          <div className="chip mb-4">Services</div>
+          <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
+            <span className="text-gradient">Everything you need</span> to grow online.
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            From brand-defining websites to AI-powered systems — we design, build and scale.
+          </p>
+        </Reveal>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {SERVICES.map((s, i) => (
+            <Reveal key={s.title} delay={i * 0.05}>
+              <CardSpotlight className="glass card-hover h-full rounded-2xl p-7">
+                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--brand)]/20 to-[var(--accent2)]/20 text-[var(--brand)] ring-1 ring-white/10">
+                  <s.icon className="h-6 w-6" />
+                </div>
+                <h3 className="font-display text-xl font-semibold">{s.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                <div className="mt-6 flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] text-[var(--brand)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  Learn more <ArrowUpRight className="h-3.5 w-3.5" />
+                </div>
+              </CardSpotlight>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- WHY US ---------------- */
+
+function WhyUs() {
+  const stats = [
+    { value: 40, suffix: "+", label: "Projects Delivered" },
+    { value: 98, suffix: "%", label: "Client Satisfaction" },
+    { value: 3, suffix: "x", label: "Avg. Conversion Lift" },
+    { value: 24, suffix: "/7", label: "Support Availability" },
+  ];
+  return (
+    <section className="relative py-28 md:py-40">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid gap-16 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <Reveal>
+              <div className="chip mb-4">Why Zalaltor</div>
+              <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
+                <span className="text-gradient">Craftsmanship</span> you can measure.
+              </h2>
+              <p className="mt-4 max-w-md text-muted-foreground">
+                We combine strategy, design and engineering — obsessing over every pixel and
+                every millisecond so your business wins online.
+              </p>
+
+              <div className="mt-10 grid grid-cols-2 gap-6">
+                {stats.map((s) => (
+                  <div key={s.label} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                    <div className="font-display text-3xl font-semibold text-gradient">
+                      <Counter to={s.value} suffix={s.suffix} />
+                    </div>
+                    <div className="mt-1 text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+
+          <div className="lg:col-span-7">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {WHY.map((w, i) => (
+                <Reveal key={w.title} delay={i * 0.05}>
+                  <CardSpotlight className="glass h-full rounded-2xl p-6">
+                    <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 text-[var(--accent2)] ring-1 ring-white/10">
+                      <w.icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-display text-lg font-semibold">{w.title}</h3>
+                    <p className="mt-1.5 text-sm text-muted-foreground">{w.desc}</p>
+                  </CardSpotlight>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- PROCESS ---------------- */
+
+function Process() {
+  return (
+    <section id="process" className="relative py-28 md:py-40">
+      <div className="mx-auto max-w-7xl px-6">
+        <Reveal className="mx-auto mb-20 max-w-2xl text-center">
+          <div className="chip mb-4">Our Process</div>
+          <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
+            <span className="text-gradient">From idea</span> to launch.
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            A proven 5-step framework we use on every project — transparent, collaborative, and fast.
+          </p>
+        </Reveal>
+
+        <div className="relative">
+          <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-[var(--brand)]/40 to-transparent md:block" />
+          <div className="space-y-14 md:space-y-24">
+            {PROCESS.map((step, i) => {
+              const left = i % 2 === 0;
+              return (
+                <Reveal key={step.title}>
+                  <div className="grid gap-6 md:grid-cols-2 md:items-center">
+                    <div className={`${left ? "md:pr-16 md:text-right md:order-1" : "md:pl-16 md:order-2"}`}>
+                      <div className="chip mb-3">Step 0{i + 1}</div>
+                      <h3 className="font-display text-3xl font-semibold tracking-tight">{step.title}</h3>
+                      <p className="mt-3 text-muted-foreground">{step.desc}</p>
+                    </div>
+                    <div className={`relative ${left ? "md:order-2" : "md:order-1"}`}>
+                      <div className="glass mx-auto flex h-24 w-24 items-center justify-center rounded-3xl md:mx-0 md:h-32 md:w-32">
+                        <step.icon className="h-9 w-9 text-[var(--brand)] md:h-11 md:w-11" />
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- TESTIMONIALS ---------------- */
+
+function Testimonials() {
+  const row1 = TESTIMONIALS;
+  const row2 = [...TESTIMONIALS].reverse();
+  return (
+    <section id="testimonials" className="relative overflow-hidden py-28 md:py-40">
+      <div className="mx-auto mb-16 max-w-3xl px-6 text-center">
+        <Reveal>
+          <div className="chip mb-4">Clients</div>
+          <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
+            <span className="text-gradient">Loved</span> by founders and teams.
+          </h2>
+        </Reveal>
+      </div>
+
+      <Marquee items={row1} duration={40} />
+      <div className="h-5" />
+      <Marquee items={row2} duration={55} reverse />
+    </section>
+  );
+}
+
+function Marquee({
+  items,
+  duration,
+  reverse = false,
+}: {
+  items: typeof TESTIMONIALS;
+  duration: number;
+  reverse?: boolean;
+}) {
+  const doubled = [...items, ...items];
+  return (
+    <div className="group relative [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+      <motion.div
+        className="flex gap-5"
+        animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
+        transition={{ duration, repeat: Infinity, ease: "linear" }}
+      >
+        {doubled.map((t, i) => (
+          <div key={i} className="w-[340px] shrink-0 sm:w-[400px]">
+            <CardSpotlight className="glass card-hover h-full rounded-2xl p-6">
+              <div className="mb-3 flex items-center gap-1 text-[var(--accent2)]">
+                {Array.from({ length: 5 }).map((_, k) => (
+                  <Star key={k} className="h-4 w-4 fill-current" />
+                ))}
+              </div>
+              <p className="text-sm leading-relaxed text-foreground/90">“{t.quote}”</p>
+              <div className="mt-5 flex items-center gap-3 border-t border-white/5 pt-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--brand)] to-[var(--accent2)] font-display text-sm font-semibold text-[var(--ink)]">
+                  {t.name.charAt(0)}
+                </div>
+                <div>
+                  <div className="text-sm font-semibold">{t.name}</div>
+                  <div className="text-xs text-muted-foreground">{t.role}</div>
+                </div>
+              </div>
+            </CardSpotlight>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+/* ---------------- CONTACT ---------------- */
+
+function Contact() {
+  const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", message: "" });
+  const [sent, setSent] = useState(false);
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const body = encodeURIComponent(
+      `Name: ${form.name}\nBusiness: ${form.business}\nEmail: ${form.email}\nPhone: ${form.phone}\n\n${form.message}`
+    );
+    const subject = encodeURIComponent(`New project inquiry from ${form.name || "website"}`);
+    window.location.href = `mailto:murtazadooz6@gmail.com?subject=${subject}&body=${body}`;
+    setSent(true);
+  };
+
+  return (
+    <section id="contact" className="relative py-28 md:py-40">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[var(--surface)] p-8 sm:p-12 md:p-16">
+          <div className="pointer-events-none absolute inset-0 opacity-80 [background:radial-gradient(60%_50%_at_20%_20%,color-mix(in_oklab,var(--brand)_25%,transparent)_0%,transparent_60%),radial-gradient(50%_40%_at_90%_10%,color-mix(in_oklab,var(--accent2)_25%,transparent)_0%,transparent_60%)]" />
+          <div className="relative grid gap-12 md:grid-cols-2 md:items-start">
+            <div>
+              <Reveal>
+                <div className="chip mb-4">Contact</div>
+                <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
+                  <span className="text-gradient">Let's build something</span> exceptional.
+                </h2>
+                <p className="mt-4 max-w-md text-muted-foreground">
+                  Tell us about your business and goals. We'll get back within one business day
+                  with next steps and ideas.
+                </p>
+
+                <div className="mt-10 space-y-4">
+                  <ContactLine icon={Mail} label="Email" value="murtazadooz6@gmail.com" href="mailto:murtazadooz6@gmail.com" />
+                  <ContactLine icon={Phone} label="Call" value="+92 370 5104014" href="tel:+923705104014" />
+                  <ContactLine icon={Phone} label="Call" value="+92 313 9120755" href="tel:+923139120755" />
+                  <ContactLine icon={MessageCircle} label="WhatsApp" value="+92 370 5104014" href="https://wa.me/923705104014" />
+                </div>
+              </Reveal>
+            </div>
+
+            <Reveal delay={0.1}>
+              <form onSubmit={onSubmit} className="glass rounded-2xl p-6 sm:p-8">
+                <div className="grid gap-4">
+                  <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
+                  <Field label="Business Name" value={form.business} onChange={(v) => setForm({ ...form, business: v })} />
+                  <Field type="email" label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
+                  <Field type="tel" label="Phone Number" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
+                  <div>
+                    <label className="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-foreground">Message</label>
+                    <textarea
+                      required
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      rows={4}
+                      placeholder="Tell us about your project…"
+                      className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition focus:border-[var(--brand)]/60 focus:bg-white/10"
+                    />
+                  </div>
+                  <button type="submit" className="btn-primary mt-2 w-full justify-center">
+                    {sent ? "Opening your email…" : "Send Inquiry"} <Send className="h-4 w-4" />
+                  </button>
+                  <p className="text-center text-[11px] text-muted-foreground">
+                    We reply within 1 business day.
+                  </p>
+                </div>
+              </form>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ContactLine({ icon: Icon, label, value, href }: { icon: typeof Mail; label: string; value: string; href: string }) {
+  return (
+    <a href={href} className="group flex items-center gap-4 rounded-xl border border-white/5 bg-white/[0.02] p-4 transition hover:border-[var(--brand)]/40 hover:bg-white/5">
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--brand)]/20 to-[var(--accent2)]/20 text-[var(--brand)] ring-1 ring-white/10">
+        <Icon className="h-4 w-4" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{label}</div>
+        <div className="truncate text-sm font-medium">{value}</div>
+      </div>
+      <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
+    </a>
+  );
+}
+
+function Field({
+  label, value, onChange, type = "text", required = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  required?: boolean;
+}) {
+  return (
+    <div>
+      <label className="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-foreground">{label}</label>
+      <input
+        type={type}
+        required={required}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition focus:border-[var(--brand)]/60 focus:bg-white/10"
+      />
+    </div>
+  );
+}
+
+/* ---------------- FOOTER ---------------- */
+
+function Footer() {
+  return (
+    <footer className="relative border-t border-white/5 py-12">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--brand)] to-[var(--accent2)] font-display text-sm font-bold text-[var(--ink)]">Z</div>
+          <div>
+            <div className="font-display text-sm font-semibold">Zalaltor</div>
+            <div className="text-[11px] text-muted-foreground">Where Vision Becomes Digital Reality.</div>
+          </div>
+        </div>
+        <div className="text-center text-xs text-muted-foreground md:text-right">
+          © {new Date().getFullYear()} Zalaltor. Crafted with care. <br className="md:hidden" />
+          <a href="mailto:murtazadooz6@gmail.com" className="hover:text-foreground">murtazadooz6@gmail.com</a>
+        </div>
+      </div>
+    </footer>
   );
 }
