@@ -915,19 +915,6 @@ function Marquee({
 /* ---------------- CONTACT ---------------- */
 
 function Contact() {
-  const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", message: "" });
-  const [sent, setSent] = useState(false);
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nBusiness: ${form.business}\nEmail: ${form.email}\nPhone: ${form.phone}\n\n${form.message}`
-    );
-    const subject = encodeURIComponent(`New project inquiry from ${form.name || "website"}`);
-    window.location.href = `mailto:murtazadooz6@gmail.com?subject=${subject}&body=${body}`;
-    setSent(true);
-  };
-
   return (
     <section id="contact" className="relative py-28 md:py-40">
       <div className="mx-auto max-w-6xl px-6">
@@ -955,36 +942,244 @@ function Contact() {
             </div>
 
             <Reveal delay={0.1}>
-              <form onSubmit={onSubmit} className="glass rounded-2xl p-6 sm:p-8">
-                <div className="grid gap-4">
-                  <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-                  <Field label="Business Name" value={form.business} onChange={(v) => setForm({ ...form, business: v })} />
-                  <Field type="email" label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
-                  <Field type="tel" label="Phone Number" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
-                  <div>
-                    <label className="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-foreground">Message</label>
-                    <textarea
-                      required
-                      value={form.message}
-                      onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      rows={4}
-                      placeholder="Tell us about your project…"
-                      className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition focus:border-[var(--brand)]/60 focus:bg-white/10"
-                    />
-                  </div>
-                  <button type="submit" className="btn-primary mt-2 w-full justify-center">
-                    {sent ? "Opening your email…" : "Send Inquiry"} <Send className="h-4 w-4" />
-                  </button>
-                  <p className="text-center text-[11px] text-muted-foreground">
-                    We reply within 1 business day.
-                  </p>
-                </div>
-              </form>
+              <MultiStepLeadForm />
             </Reveal>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+type LeadData = {
+  name: string;
+  business: string;
+  websiteType: string;
+  phone: string;
+  email: string;
+  message: string;
+};
+
+const WEBSITE_TYPES = [
+  "Business Website",
+  "E-commerce Store",
+  "Booking System",
+  "Landing Page",
+  "Other",
+];
+
+function MultiStepLeadForm() {
+  const [step, setStep] = useState(0);
+  const [dir, setDir] = useState(1);
+  const [submitted, setSubmitted] = useState(false);
+  const [data, setData] = useState<LeadData>({
+    name: "", business: "", websiteType: "", phone: "", email: "", message: "",
+  });
+
+  const steps: {
+    key: keyof LeadData;
+    title: string;
+    subtitle?: string;
+    type: "text" | "email" | "tel" | "textarea" | "choice";
+    placeholder?: string;
+    options?: string[];
+    required?: boolean;
+    validate?: (v: string) => string | null;
+  }[] = [
+    { key: "name", title: "What's your name?", subtitle: "Let's start with an introduction.", type: "text", placeholder: "e.g. Ahmed Khan", required: true },
+    { key: "business", title: "What's your business name?", subtitle: "So we can tailor our reply.", type: "text", placeholder: "e.g. Zalaltor Studio", required: true },
+    { key: "websiteType", title: "What type of website do you need?", subtitle: "Pick the closest match.", type: "choice", options: WEBSITE_TYPES, required: true },
+    { key: "phone", title: "What's your phone number?", subtitle: "We'll only use this to contact you.", type: "tel", placeholder: "+92 3XX XXXXXXX", required: true },
+    {
+      key: "email", title: "What's your email address?", subtitle: "We'll send the proposal here.", type: "email", placeholder: "you@company.com", required: true,
+      validate: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : "Please enter a valid email address.",
+    },
+    { key: "message", title: "Tell us about your project.", subtitle: "Goals, timeline, references — anything helps.", type: "textarea", placeholder: "We're launching a new brand and need…", required: true },
+  ];
+
+  const total = steps.length;
+  const isThankYou = submitted;
+  const progress = isThankYou ? 100 : (step / total) * 100;
+
+  const current = steps[step];
+  const value = current ? data[current.key] : "";
+  const error = current?.validate && value ? current.validate(value) : null;
+  const canProceed = current
+    ? (!current.required || value.trim().length > 0) && !error
+    : false;
+
+  const goNext = () => {
+    if (!canProceed) return;
+    setDir(1);
+    if (step < total - 1) setStep(step + 1);
+    else submit();
+  };
+  const goBack = () => {
+    if (step === 0) return;
+    setDir(-1);
+    setStep(step - 1);
+  };
+
+  const submit = () => {
+    const body = encodeURIComponent(
+      `Name: ${data.name}\nBusiness: ${data.business}\nWebsite Type: ${data.websiteType}\nPhone: ${data.phone}\nEmail: ${data.email}\n\n${data.message}`
+    );
+    const subject = encodeURIComponent(`New project inquiry from ${data.name || "website"}`);
+    if (typeof window !== "undefined") {
+      window.open(`mailto:murtazadooz6@gmail.com?subject=${subject}&body=${body}`, "_blank");
+    }
+    setSubmitted(true);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && current?.type !== "textarea") {
+      e.preventDefault();
+      goNext();
+    }
+  };
+
+  return (
+    <div className="glass relative overflow-hidden rounded-2xl p-6 sm:p-8">
+      {/* Progress */}
+      <div className="mb-6">
+        <div className="mb-2 flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+          <span>{isThankYou ? "Complete" : `Step ${step + 1} of ${total}`}</span>
+          <span>{Math.round(progress)}%</span>
+        </div>
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-[var(--brand)] to-[var(--accent2)]"
+            initial={false}
+            animate={{ width: `${progress}%` }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
+          />
+        </div>
+      </div>
+
+      <div className="relative min-h-[280px]">
+        <AnimatePresence mode="wait" custom={dir} initial={false}>
+          {isThankYou ? (
+            <motion.div
+              key="thankyou"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="flex flex-col items-center justify-center py-6 text-center"
+            >
+              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[var(--brand)]/20 to-[var(--accent2)]/20 ring-1 ring-white/10">
+                <Send className="h-7 w-7 text-[var(--brand)]" />
+              </div>
+              <h3 className="font-display text-2xl font-semibold sm:text-3xl">Thank you, {data.name.split(" ")[0] || "friend"}!</h3>
+              <p className="mt-3 max-w-sm text-sm text-muted-foreground">
+                We'll contact you shortly with next steps and ideas tailored to {data.business || "your business"}.
+              </p>
+              <a href="https://wa.me/923705104014" className="btn-primary mt-6">
+                Chat on WhatsApp <ArrowRight className="h-4 w-4" />
+              </a>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={step}
+              custom={dir}
+              initial={{ opacity: 0, x: dir * 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: dir * -40 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <h3 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+                {current.title}
+              </h3>
+              {current.subtitle && (
+                <p className="mt-2 text-sm text-muted-foreground">{current.subtitle}</p>
+              )}
+
+              <div className="mt-6">
+                {current.type === "choice" ? (
+                  <div className="grid gap-2">
+                    {current.options!.map((opt) => {
+                      const selected = value === opt;
+                      return (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => {
+                            setData({ ...data, [current.key]: opt });
+                            setTimeout(() => {
+                              setDir(1);
+                              setStep((s) => Math.min(s + 1, total - 1));
+                            }, 180);
+                          }}
+                          className={`group flex items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${
+                            selected
+                              ? "border-[var(--brand)]/60 bg-white/10"
+                              : "border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.06]"
+                          }`}
+                        >
+                          <span className="font-medium">{opt}</span>
+                          <ArrowRight className={`h-4 w-4 transition ${selected ? "text-[var(--brand)]" : "text-muted-foreground group-hover:translate-x-0.5"}`} />
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : current.type === "textarea" ? (
+                  <textarea
+                    autoFocus
+                    value={value}
+                    onChange={(e) => setData({ ...data, [current.key]: e.target.value })}
+                    rows={5}
+                    placeholder={current.placeholder}
+                    className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/60 outline-none transition focus:border-[var(--brand)]/60 focus:bg-white/10"
+                  />
+                ) : (
+                  <input
+                    autoFocus
+                    type={current.type}
+                    value={value}
+                    onChange={(e) => setData({ ...data, [current.key]: e.target.value })}
+                    onKeyDown={onKeyDown}
+                    placeholder={current.placeholder}
+                    inputMode={current.type === "tel" ? "tel" : current.type === "email" ? "email" : "text"}
+                    autoComplete={
+                      current.key === "email" ? "email" :
+                      current.key === "phone" ? "tel" :
+                      current.key === "name" ? "name" :
+                      current.key === "business" ? "organization" : "off"
+                    }
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-foreground placeholder:text-muted-foreground/50 outline-none transition focus:border-[var(--brand)]/60 focus:bg-white/10"
+                  />
+                )}
+                {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {!isThankYou && (
+        <div className="mt-8 flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={goBack}
+            disabled={step === 0}
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-muted-foreground transition hover:border-white/20 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            <ArrowRight className="h-4 w-4 rotate-180" /> Back
+          </button>
+          {current?.type !== "choice" && (
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={!canProceed}
+              className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {step === total - 1 ? "Submit" : "Next"}
+              {step === total - 1 ? <Send className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
+            </button>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
