@@ -851,12 +851,12 @@ function WhyUs() {
     { value: 24, suffix: "/7", label: "Support Availability" },
   ];
   return (
-    <section className="relative py-28 md:py-40">
+    <section id="about" className="relative py-28 md:py-40">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-16 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Reveal>
-              <div className="chip mb-4">Why Zalaltor</div>
+              <div className="chip mb-4">About Zalaltor</div>
               <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
                 <span className="text-gradient">Craftsmanship</span> you can measure.
               </h2>
