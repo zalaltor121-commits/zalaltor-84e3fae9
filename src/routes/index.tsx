@@ -62,12 +62,26 @@ function useMousePosition() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    // Respect reduced-motion + skip on touch/small screens for perf.
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isCoarse || reduced) return;
+    let raf = 0;
+    let lx = 0, ly = 0;
     const handler = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
+      lx = e.clientX; ly = e.clientY;
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        x.set(lx); y.set(ly);
+        raf = 0;
+      });
     };
-    window.addEventListener("mousemove", handler);
-    return () => window.removeEventListener("mousemove", handler);
+    window.addEventListener("mousemove", handler, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handler);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [x, y]);
   return { x, y };
 }
@@ -104,16 +118,24 @@ function AuroraBackground() {
 }
 
 function Spotlight() {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setEnabled(!isCoarse && !reduced);
+  }, []);
   const { x, y } = useMousePosition();
   const bx = useSpring(x, { stiffness: 60, damping: 20 });
   const by = useSpring(y, { stiffness: 60, damping: 20 });
   const bg = useTransform([bx, by], ([lx, ly]: number[]) =>
     `radial-gradient(600px circle at ${lx}px ${ly}px, color-mix(in oklab, var(--brand) 22%, transparent), transparent 70%)`
   );
+  if (!enabled) return null;
   return (
     <motion.div
       aria-hidden
-      style={{ background: bg as unknown as string }}
+      style={{ background: bg as unknown as string, willChange: "background" }}
       className="pointer-events-none fixed inset-0 z-30 mix-blend-screen"
     />
   );
