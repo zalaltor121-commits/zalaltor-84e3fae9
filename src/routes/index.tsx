@@ -470,12 +470,19 @@ function Nav() {
     return () => window.removeEventListener("scroll", h);
   }, []);
   const links = [
+    { href: "#top", label: "Home" },
     { href: "#work", label: "Work" },
     { href: "#services", label: "Services" },
     { href: "#process", label: "Process" },
-    { href: "#testimonials", label: "Clients" },
+    { href: "#about", label: "About" },
     { href: "#contact", label: "Contact" },
   ];
+  // Lock body scroll when overlay is open.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
@@ -490,7 +497,7 @@ function Nav() {
         <span className="font-display text-lg font-semibold tracking-wide">Zalaltor</span>
       </a>
       <nav className="hidden items-center gap-1 md:flex">
-        {links.map((l) => (
+        {links.filter((l) => l.href !== "#top").map((l) => (
           <a
             key={l.href}
             href={l.href}
@@ -507,36 +514,107 @@ function Nav() {
       <button
         aria-label="Toggle menu"
         onClick={() => setOpen((v) => !v)}
-        className="rounded-full border border-white/10 p-2 md:hidden"
+        className="relative z-[70] rounded-full border border-white/10 bg-white/5 p-2 backdrop-blur md:hidden"
       >
         {open ? <X className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
       </button>
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="glass absolute left-4 right-4 top-full mt-3 flex flex-col gap-1 rounded-2xl p-3 md:hidden"
-          >
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-4 py-3 text-sm text-foreground hover:bg-white/5"
-              >
-                {l.label}
-              </a>
-            ))}
-            <a href="#contact" onClick={() => setOpen(false)} className="btn-primary mt-2 text-sm">
-              Start a Project <ArrowRight className="h-4 w-4" />
-            </a>
-          </motion.div>
+          <MobileMenuOverlay links={links} onClose={() => setOpen(false)} />
         )}
       </AnimatePresence>
     </motion.header>
+  );
+}
+
+function MobileMenuOverlay({
+  links,
+  onClose,
+}: {
+  links: { href: string; label: string }[];
+  onClose: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-0 z-[65] md:hidden"
+      style={{ willChange: "opacity" }}
+    >
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-[color-mix(in_oklab,var(--ink)_82%,transparent)] backdrop-blur-2xl"
+      />
+      {/* Ambient gradient */}
+      <div className="pointer-events-none absolute inset-0 opacity-70 [background:radial-gradient(60%_50%_at_20%_20%,color-mix(in_oklab,var(--brand)_25%,transparent)_0%,transparent_60%),radial-gradient(50%_40%_at_80%_80%,color-mix(in_oklab,var(--accent2)_25%,transparent)_0%,transparent_60%)]" />
+
+      {/* Panel */}
+      <motion.div
+        initial={{ y: -12, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -12, opacity: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="relative flex h-full flex-col px-6 pb-10 pt-24"
+      >
+        <div className="mb-4 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">Menu</div>
+        <nav className="flex flex-col">
+          {links.map((l, i) => (
+            <motion.a
+              key={l.href}
+              href={l.href}
+              onClick={onClose}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              transition={{
+                duration: 0.55,
+                delay: 0.08 + i * 0.06,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="group flex items-center justify-between border-b border-white/10 py-4"
+            >
+              <span className="font-display text-4xl font-semibold tracking-tight text-gradient sm:text-5xl">
+                {l.label}
+              </span>
+              <ArrowUpRight className="h-6 w-6 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </motion.a>
+          ))}
+        </nav>
+
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, delay: 0.08 + links.length * 0.06 + 0.05, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-8"
+        >
+          <a href="#contact" onClick={onClose} className="btn-primary w-full text-base">
+            Start Your Project <ArrowRight className="h-4 w-4" />
+          </a>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, delay: 0.08 + links.length * 0.06 + 0.12 }}
+          className="mt-auto space-y-2 pt-10 text-sm text-muted-foreground"
+        >
+          <div className="text-[11px] uppercase tracking-[0.3em]">Get in touch</div>
+          <a href="mailto:zalaltor121@gmail.com" className="block truncate text-foreground/90 hover:text-foreground">zalaltor121@gmail.com</a>
+          <a href="tel:+923705104014" className="block text-foreground/80 hover:text-foreground">+92 370 5104014</a>
+          <a href="https://wa.me/923705104014" className="block text-foreground/80 hover:text-foreground">WhatsApp · +92 370 5104014</a>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
 
