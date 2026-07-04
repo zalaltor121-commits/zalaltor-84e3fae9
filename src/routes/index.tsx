@@ -43,7 +43,7 @@ export const Route = createFileRoute("/")({
           name: "Zalaltor",
           description:
             "Premium web design agency building high-converting websites, e-commerce, booking systems and AI automations.",
-          email: "murtazadooz6@gmail.com",
+          email: "zalaltor121@gmail.com",
           telephone: "+923705104014",
           areaServed: "Worldwide",
           slogan: "Where Vision Becomes Digital Reality.",
@@ -955,7 +955,7 @@ function Contact() {
                 </p>
 
                 <div className="mt-10 space-y-4">
-                  <ContactLine icon={Mail} label="Email" value="murtazadooz6@gmail.com" href="mailto:murtazadooz6@gmail.com" />
+                  <ContactLine icon={Mail} label="Email" value="zalaltor121@gmail.com" href="mailto:zalaltor121@gmail.com" />
                   <ContactLine icon={Phone} label="Call" value="+92 370 5104014" href="tel:+923705104014" />
                   <ContactLine icon={Phone} label="Call" value="+92 313 9120755" href="tel:+923139120755" />
                   <ContactLine icon={MessageCircle} label="WhatsApp" value="+92 370 5104014" href="https://wa.me/923705104014" />
@@ -1048,7 +1048,7 @@ function MultiStepLeadForm() {
     );
     const subject = encodeURIComponent(`New project inquiry from ${data.name || "website"}`);
     if (typeof window !== "undefined") {
-      window.open(`mailto:murtazadooz6@gmail.com?subject=${subject}&body=${body}`, "_blank");
+      window.open(`mailto:zalaltor121@gmail.com?subject=${subject}&body=${body}`, "_blank");
     }
     setSubmitted(true);
   };
@@ -1258,7 +1258,7 @@ function Footer() {
         </div>
         <div className="text-center text-xs text-muted-foreground md:text-right">
           © {new Date().getFullYear()} Zalaltor. Crafted with care. <br className="md:hidden" />
-          <a href="mailto:murtazadooz6@gmail.com" className="hover:text-foreground">murtazadooz6@gmail.com</a>
+          <a href="mailto:zalaltor121@gmail.com" className="hover:text-foreground">zalaltor121@gmail.com</a>
         </div>
       </div>
     </footer>
