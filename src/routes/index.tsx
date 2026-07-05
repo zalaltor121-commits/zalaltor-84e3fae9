@@ -13,6 +13,7 @@ import cramerImg from "@/assets/portfolio/cramer.png";
 import wrapImg from "@/assets/portfolio/wrapstation.png";
 import odeonImg from "@/assets/portfolio/odeon.png";
 import uppercutImg from "@/assets/portfolio/uppercut.png";
+import { ZalaltorMark } from "@/components/ZalaltorLogo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -490,11 +491,18 @@ function Nav() {
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className={`fixed inset-x-0 top-4 z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-3 transition-all duration-300 md:top-6 md:px-6 ${scrolled ? "glass shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)]" : "bg-transparent"}`}
     >
-      <a href="#top" className="group flex items-center gap-2">
-        <div className="relative h-8 w-8 overflow-hidden rounded-lg bg-gradient-to-br from-[var(--brand)] to-[var(--accent2)]">
-          <div className="absolute inset-0 flex items-center justify-center font-display text-sm font-bold text-[var(--ink)]">Z</div>
-        </div>
-        <span className="font-display text-lg font-semibold tracking-wide">Zalaltor</span>
+      <a
+        href="#top"
+        aria-label="Zalaltor — home"
+        className="group flex items-center gap-2.5 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]/60"
+      >
+        <span className="relative inline-flex transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105">
+          <span className="absolute inset-0 -z-10 rounded-full bg-[var(--brand)]/25 opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
+          <ZalaltorMark size={34} variant="accent" />
+        </span>
+        <span className="hidden font-display text-lg font-semibold tracking-wide sm:inline">
+          Zalaltor
+        </span>
       </a>
       <nav className="hidden items-center gap-1 md:flex">
         {links.filter((l) => l.href !== "#top").map((l) => (
@@ -1327,8 +1335,8 @@ function Footer() {
   return (
     <footer className="relative border-t border-white/5 py-12">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--brand)] to-[var(--accent2)] font-display text-sm font-bold text-[var(--ink)]">Z</div>
+        <div className="flex items-center gap-3">
+          <ZalaltorMark size={36} variant="accent" animated={false} />
           <div>
             <div className="font-display text-sm font-semibold">Zalaltor</div>
             <div className="text-[11px] text-muted-foreground">Where Vision Becomes Digital Reality.</div>
