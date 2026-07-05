@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Zalaltor is a premium web design agency crafting high-converting websites, e-commerce stores, booking systems and AI-driven digital experiences for ambitious businesses.",
+          "Zalaltor is a premium web agency building high-converting websites, e-commerce stores, booking systems and AI experiences for ambitious businesses.",
       },
       { property: "og:title", content: "Zalaltor — Websites That Turn Visitors Into Customers" },
       {
@@ -1195,7 +1195,7 @@ function MultiStepLeadForm() {
               exit={{ opacity: 0, x: dir * -40 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
-              <h3 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+              <h3 id={`lead-step-${step}`} className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
                 {current.title}
               </h3>
               {current.subtitle && (
@@ -1233,6 +1233,9 @@ function MultiStepLeadForm() {
                 ) : current.type === "textarea" ? (
                   <textarea
                     autoFocus
+                    id={`lead-input-${current.key}`}
+                    name={current.key}
+                    aria-labelledby={`lead-step-${step}`}
                     value={value}
                     onChange={(e) => setData({ ...data, [current.key]: e.target.value })}
                     rows={5}
@@ -1242,6 +1245,9 @@ function MultiStepLeadForm() {
                 ) : (
                   <input
                     autoFocus
+                    id={`lead-input-${current.key}`}
+                    name={current.key}
+                    aria-labelledby={`lead-step-${step}`}
                     type={current.type}
                     value={value}
                     onChange={(e) => setData({ ...data, [current.key]: e.target.value })}
