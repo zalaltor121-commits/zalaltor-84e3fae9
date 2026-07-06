@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ServicesEcommerceRouteImport } from './routes/services.ecommerce'
+import { Route as ServicesBusinessWebsitesRouteImport } from './routes/services.business-websites'
+import { Route as ServicesBookingSystemsRouteImport } from './routes/services.booking-systems'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -22,31 +25,75 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesEcommerceRoute = ServicesEcommerceRouteImport.update({
+  id: '/services/ecommerce',
+  path: '/services/ecommerce',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesBusinessWebsitesRoute =
+  ServicesBusinessWebsitesRouteImport.update({
+    id: '/services/business-websites',
+    path: '/services/business-websites',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ServicesBookingSystemsRoute = ServicesBookingSystemsRouteImport.update({
+  id: '/services/booking-systems',
+  path: '/services/booking-systems',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/services/booking-systems': typeof ServicesBookingSystemsRoute
+  '/services/business-websites': typeof ServicesBusinessWebsitesRoute
+  '/services/ecommerce': typeof ServicesEcommerceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/services/booking-systems': typeof ServicesBookingSystemsRoute
+  '/services/business-websites': typeof ServicesBusinessWebsitesRoute
+  '/services/ecommerce': typeof ServicesEcommerceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/services/booking-systems': typeof ServicesBookingSystemsRoute
+  '/services/business-websites': typeof ServicesBusinessWebsitesRoute
+  '/services/ecommerce': typeof ServicesEcommerceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sitemap.xml'
+  fullPaths:
+    | '/'
+    | '/sitemap.xml'
+    | '/services/booking-systems'
+    | '/services/business-websites'
+    | '/services/ecommerce'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap.xml'
-  id: '__root__' | '/' | '/sitemap.xml'
+  to:
+    | '/'
+    | '/sitemap.xml'
+    | '/services/booking-systems'
+    | '/services/business-websites'
+    | '/services/ecommerce'
+  id:
+    | '__root__'
+    | '/'
+    | '/sitemap.xml'
+    | '/services/booking-systems'
+    | '/services/business-websites'
+    | '/services/ecommerce'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ServicesBookingSystemsRoute: typeof ServicesBookingSystemsRoute
+  ServicesBusinessWebsitesRoute: typeof ServicesBusinessWebsitesRoute
+  ServicesEcommerceRoute: typeof ServicesEcommerceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +112,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/ecommerce': {
+      id: '/services/ecommerce'
+      path: '/services/ecommerce'
+      fullPath: '/services/ecommerce'
+      preLoaderRoute: typeof ServicesEcommerceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/business-websites': {
+      id: '/services/business-websites'
+      path: '/services/business-websites'
+      fullPath: '/services/business-websites'
+      preLoaderRoute: typeof ServicesBusinessWebsitesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/booking-systems': {
+      id: '/services/booking-systems'
+      path: '/services/booking-systems'
+      fullPath: '/services/booking-systems'
+      preLoaderRoute: typeof ServicesBookingSystemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ServicesBookingSystemsRoute: ServicesBookingSystemsRoute,
+  ServicesBusinessWebsitesRoute: ServicesBusinessWebsitesRoute,
+  ServicesEcommerceRoute: ServicesEcommerceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
