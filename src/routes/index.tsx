@@ -313,9 +313,16 @@ function CardSpotlight({ children, className = "" }: { children: ReactNode; clas
 function Counter({ to, suffix = "", duration = 2 }: { to: number; suffix?: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
-  const [val, setVal] = useState(0);
+  // Render the final value on the server so crawlers see the real number,
+  // then animate from 0 -> to on the client once in view.
+  const [val, setVal] = useState(to);
+  const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    if (!inView) return;
+    setHydrated(true);
+    setVal(0);
+  }, []);
+  useEffect(() => {
+    if (!inView || !hydrated) return;
     const start = performance.now();
     let raf = 0;
     const tick = (t: number) => {
@@ -326,7 +333,7 @@ function Counter({ to, suffix = "", duration = 2 }: { to: number; suffix?: strin
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [inView, to, duration]);
+  }, [inView, to, duration, hydrated]);
   return (
     <span ref={ref}>
       {val.toLocaleString()}
@@ -986,7 +993,6 @@ function Marquee({
   duration: number;
   reverse?: boolean;
 }) {
-  const doubled = [...items, ...items];
   return (
     <div className="group relative [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
       <motion.div
@@ -994,8 +1000,13 @@ function Marquee({
         animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
         transition={{ duration, repeat: Infinity, ease: "linear" }}
       >
-        {doubled.map((t, i) => (
-          <div key={i} className="w-[340px] shrink-0 sm:w-[400px]">
+        {[0, 1].map((copy) =>
+          items.map((t, i) => (
+          <div
+            key={`${copy}-${i}`}
+            className="w-[340px] shrink-0 sm:w-[400px]"
+            aria-hidden={copy === 1 ? "true" : undefined}
+          >
             <CardSpotlight className="glass card-hover h-full rounded-2xl p-6">
               <div className="mb-3 flex items-center gap-1 text-[var(--accent2)]">
                 {Array.from({ length: 5 }).map((_, k) => (
@@ -1014,7 +1025,8 @@ function Marquee({
               </div>
             </CardSpotlight>
           </div>
-        ))}
+          )),
+        )}
       </motion.div>
     </div>
   );
