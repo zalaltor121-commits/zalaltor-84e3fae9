@@ -1140,13 +1140,20 @@ function MultiStepLeadForm() {
     setStep(step - 1);
   };
 
-  const submit = () => {
-    const body = encodeURIComponent(
-      `Name: ${data.name}\nBusiness: ${data.business}\nWebsite Type: ${data.websiteType}\nPhone: ${data.phone}\nEmail: ${data.email}\n\n${data.message}`
-    );
-    const subject = encodeURIComponent(`New project inquiry from ${data.name || "website"}`);
-    if (typeof window !== "undefined") {
-      window.open(`mailto:zalaltor121@gmail.com?subject=${subject}&body=${body}`, "_blank");
+  const submit = async () => {
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      await supabase.from("leads").insert({
+        name: data.name,
+        business: data.business || null,
+        website_type: data.websiteType || null,
+        phone: data.phone || null,
+        email: data.email,
+        message: data.message || null,
+        source: "website",
+      });
+    } catch (err) {
+      console.error("Lead insert failed", err);
     }
     setSubmitted(true);
   };
