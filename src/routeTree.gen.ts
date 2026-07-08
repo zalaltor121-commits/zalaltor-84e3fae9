@@ -9,8 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkRouteImport } from './routes/work'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ProcessRouteImport } from './routes/process'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesEcommerceRouteImport } from './routes/services.ecommerce'
@@ -18,14 +22,34 @@ import { Route as ServicesBusinessWebsitesRouteImport } from './routes/services.
 import { Route as ServicesBookingSystemsRouteImport } from './routes/services.booking-systems'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
+const WorkRoute = WorkRouteImport.update({
+  id: '/work',
+  path: '/work',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProcessRoute = ProcessRouteImport.update({
+  id: '/process',
+  path: '/process',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -61,8 +85,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/process': typeof ProcessRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/work': typeof WorkRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/services/booking-systems': typeof ServicesBookingSystemsRoute
   '/services/business-websites': typeof ServicesBusinessWebsitesRoute
@@ -70,8 +98,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/process': typeof ProcessRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/work': typeof WorkRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/services/booking-systems': typeof ServicesBookingSystemsRoute
   '/services/business-websites': typeof ServicesBusinessWebsitesRoute
@@ -81,8 +113,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/process': typeof ProcessRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/work': typeof WorkRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/services/booking-systems': typeof ServicesBookingSystemsRoute
   '/services/business-websites': typeof ServicesBusinessWebsitesRoute
@@ -92,8 +128,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/auth'
+    | '/contact'
+    | '/process'
     | '/sitemap.xml'
+    | '/work'
     | '/admin'
     | '/services/booking-systems'
     | '/services/business-websites'
@@ -101,8 +141,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/auth'
+    | '/contact'
+    | '/process'
     | '/sitemap.xml'
+    | '/work'
     | '/admin'
     | '/services/booking-systems'
     | '/services/business-websites'
@@ -111,8 +155,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about'
     | '/auth'
+    | '/contact'
+    | '/process'
     | '/sitemap.xml'
+    | '/work'
     | '/_authenticated/admin'
     | '/services/booking-systems'
     | '/services/business-websites'
@@ -122,8 +170,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  ContactRoute: typeof ContactRoute
+  ProcessRoute: typeof ProcessRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  WorkRoute: typeof WorkRoute
   ServicesBookingSystemsRoute: typeof ServicesBookingSystemsRoute
   ServicesBusinessWebsitesRoute: typeof ServicesBusinessWebsitesRoute
   ServicesEcommerceRoute: typeof ServicesEcommerceRoute
@@ -131,6 +183,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/work': {
+      id: '/work'
+      path: '/work'
+      fullPath: '/work'
+      preLoaderRoute: typeof WorkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -138,11 +197,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/process': {
+      id: '/process'
+      path: '/process'
+      fullPath: '/process'
+      preLoaderRoute: typeof ProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -204,8 +284,12 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  ContactRoute: ContactRoute,
+  ProcessRoute: ProcessRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  WorkRoute: WorkRoute,
   ServicesBookingSystemsRoute: ServicesBookingSystemsRoute,
   ServicesBusinessWebsitesRoute: ServicesBusinessWebsitesRoute,
   ServicesEcommerceRoute: ServicesEcommerceRoute,
