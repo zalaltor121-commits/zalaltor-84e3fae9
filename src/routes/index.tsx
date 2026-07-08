@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode, type MouseEvent as ReactMouseEvent } from "react";
 import { motion, useMotionValue, useSpring, useTransform, useScroll, useInView, AnimatePresence } from "framer-motion";
 import {
@@ -410,9 +410,9 @@ const PROJECTS: Project[] = [
 ];
 
 const SERVICES = [
-  { icon: Layers, title: "Business Websites", desc: "Custom marketing sites engineered to build trust and generate qualified leads." },
-  { icon: ShoppingBag, title: "E-commerce Stores", desc: "Conversion-focused online stores with fast checkout and elegant product storytelling." },
-  { icon: CalendarCheck, title: "Booking Systems", desc: "Appointment and reservation platforms that fill your calendar on autopilot." },
+  { icon: Layers, title: "Business Websites", desc: "Custom marketing sites engineered to build trust and generate qualified leads.", href: "/services/business-websites" as const },
+  { icon: ShoppingBag, title: "E-commerce Stores", desc: "Conversion-focused online stores with fast checkout and elegant product storytelling.", href: "/services/ecommerce" as const },
+  { icon: CalendarCheck, title: "Booking Systems", desc: "Appointment and reservation platforms that fill your calendar on autopilot.", href: "/services/booking-systems" as const },
   { icon: Rocket, title: "Landing Pages", desc: "High-converting campaign pages built to turn ad spend into paying customers." },
   { icon: Bot, title: "AI Automations", desc: "AI chat, lead qualifiers and workflow automations that scale your operations." },
   { icon: Wand2, title: "Website Redesigns", desc: "Modernize your outdated site into a premium, mobile-first digital experience." },
@@ -838,16 +838,28 @@ function Services() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.05}>
-              <CardSpotlight className="glass card-hover h-full rounded-2xl p-7">
-                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--brand)]/20 to-[var(--accent2)]/20 text-[var(--brand)] ring-1 ring-white/10">
-                  <s.icon className="h-6 w-6" />
-                </div>
-                <h3 className="font-display text-xl font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
-                <div className="mt-6 flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] text-[var(--brand)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  Learn more <ArrowUpRight className="h-3.5 w-3.5" />
-                </div>
-              </CardSpotlight>
+              {s.href ? (
+                <Link to={s.href} className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]/60 rounded-2xl" aria-label={`${s.title} — learn more`}>
+                  <CardSpotlight className="glass card-hover h-full rounded-2xl p-7">
+                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--brand)]/20 to-[var(--accent2)]/20 text-[var(--brand)] ring-1 ring-white/10">
+                      <s.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="font-display text-xl font-semibold">{s.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                    <div className="mt-6 flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] text-[var(--brand)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      Learn more <ArrowUpRight className="h-3.5 w-3.5" />
+                    </div>
+                  </CardSpotlight>
+                </Link>
+              ) : (
+                <CardSpotlight className="glass card-hover h-full rounded-2xl p-7">
+                  <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--brand)]/20 to-[var(--accent2)]/20 text-[var(--brand)] ring-1 ring-white/10">
+                    <s.icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-display text-xl font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                </CardSpotlight>
+              )}
             </Reveal>
           ))}
         </div>
