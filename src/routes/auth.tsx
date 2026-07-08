@@ -15,7 +15,6 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,20 +31,9 @@ function AuthPage() {
     setLoading(true);
     setMessage(null);
     try {
-      if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        navigate({ to: "/admin" });
-      } else {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
-        });
-        if (error) throw error;
-        if (data.session) navigate({ to: "/admin" });
-        else setMessage({ type: "info", text: "Check your email to confirm your account." });
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      navigate({ to: "/admin" });
     } catch (err: any) {
       setMessage({ type: "error", text: err?.message ?? "Something went wrong." });
     } finally {
@@ -61,12 +49,10 @@ function AuthPage() {
         </Link>
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur">
           <h1 className="font-display text-2xl font-semibold tracking-tight">
-            {mode === "signin" ? "Admin sign in" : "Create admin account"}
+            Admin sign in
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {mode === "signin"
-              ? "Access the Zalaltor lead dashboard."
-              : "The first account created becomes the admin."}
+            Access the Zalaltor lead dashboard.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -93,7 +79,7 @@ function AuthPage() {
                 type="password"
                 required
                 minLength={8}
-                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-base outline-none transition focus:border-[var(--brand)]/60 focus:bg-white/10"
@@ -117,22 +103,9 @@ function AuthPage() {
               disabled={loading}
               className="btn-primary w-full justify-center disabled:opacity-60"
             >
-              {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+              {loading ? "Please wait…" : "Sign in"}
             </button>
           </form>
-
-          <button
-            type="button"
-            onClick={() => {
-              setMode(mode === "signin" ? "signup" : "signin");
-              setMessage(null);
-            }}
-            className="mt-6 w-full text-center text-sm text-muted-foreground hover:text-foreground"
-          >
-            {mode === "signin"
-              ? "Need to create the first admin account? Sign up"
-              : "Already have an account? Sign in"}
-          </button>
         </div>
       </div>
     </div>
