@@ -1006,7 +1006,7 @@ export function Contact() {
                 <div className="mt-10 space-y-4">
                   <ContactLine icon={Mail} label="Email" value="zalaltor121@gmail.com" href="mailto:zalaltor121@gmail.com" />
                   <ContactLine icon={Phone} label="Call" value="+92 370 5104014" href="tel:+923705104014" />
-                  <ContactLine icon={MessageCircle} label="WhatsApp" value="+92 313 9120755" href="https://wa.me/923139120755" />
+                  <ContactLine icon={MessageCircle} label="WhatsApp" value="+92 370 5104014" href="https://wa.me/923705104014" />
                 </div>
               </Reveal>
             </div>
