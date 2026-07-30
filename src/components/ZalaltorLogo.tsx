@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import logoSrc from "@/assets/brand/zalaltor-logo.svg";
+import logoSrc from "@/assets/brand/zalaltor-logo.jpg";
 
 type Variant = "mono" | "accent";
 
