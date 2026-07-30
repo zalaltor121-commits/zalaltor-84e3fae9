@@ -1,7 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="256" fill="#050505"/>
-  <circle cx="256" cy="256" r="208" stroke="#C8A96A" stroke-width="20"/>
-  <path d="M176 164H334L233 257L334 348H176L277 257L176 164Z" fill="#D7D7D7"/>
-  <path d="M188 154H286L190 250L288 348H188L278 250L188 154Z" stroke="#E4C46E" stroke-width="24" stroke-linejoin="round"/>
-  <path d="M180 158H222L314 348H272L180 158Z" fill="#E4C46E"/>
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F9D96D" />
+      <stop offset="100%" stop-color="#C3923A" />
+    </linearGradient>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F4F4F4" />
+      <stop offset="100%" stop-color="#B0B0B0" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="256" fill="#080808" />
+  <circle cx="256" cy="256" r="216" fill="none" stroke="url(#gold)" stroke-width="24" />
+  <circle cx="256" cy="256" r="204" fill="rgba(255,255,255,0.05)" />
+  <path d="M144 192 L208 192 L224 240 L304 240 L304 288 L224 288 L240 336 L144 336 Z" fill="url(#silver)" />
+  <path d="M312 128 L352 128 L272 240 L336 240 L248 336 L248 288 L336 240 L312 208 Z" fill="url(#gold)" />
 </svg>

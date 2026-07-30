@@ -1,7 +1,24 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="256" fill="#050505"/>
-  <circle cx="256" cy="256" r="208" stroke="#C8A96A" stroke-width="20"/>
-  <path d="M176 164H334L233 257L334 348H176L277 257L176 164Z" fill="#D7D7D7"/>
-  <path d="M188 154H286L190 250L288 348H188L278 250L188 154Z" stroke="#E4C46E" stroke-width="24" stroke-linejoin="round"/>
-  <path d="M180 158H222L314 348H272L180 158Z" fill="#E4C46E"/>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="goldGlow" cx="50%" cy="50%" r="55%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#F5D48B" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="edgeGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3C863" />
+      <stop offset="100%" stop-color="#A87B3B" />
+    </linearGradient>
+    <linearGradient id="silverTone" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F2F2F2" />
+      <stop offset="100%" stop-color="#B8B8B8" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="256" fill="#070707" />
+  <circle cx="256" cy="256" r="226" fill="none" stroke="url(#edgeGold)" stroke-width="18" />
+  <circle cx="256" cy="256" r="212" fill="url(#goldGlow)" />
+  <g transform="translate(64 64)">
+    <path d="M64 112 L176 112 L120 192 L320 192 L320 240 L112 240 L168 336 L64 336 L64 112 Z" fill="url(#silverTone)" />
+    <path d="M264 88 L384 88 L304 192 L368 192 L232 328 L232 280 L320 192 L264 192 L312 128 L264 88 Z" fill="#D2A15C" />
+    <path d="M296 80 L440 80 L296 216 L336 216 L424 128 L424 232 L472 232 L472 80 L296 80 Z" fill="#C9A35F" opacity="0.9" />
+  </g>
 </svg>

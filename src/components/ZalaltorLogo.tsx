@@ -68,7 +68,7 @@ export function ZalaltorMark({
  * Full lockup: mark + wordmark. Used in header and footer.
  */
 export function ZalaltorLogo({
-  size = 32,
+  size = 36,
   variant = "accent",
   showWordmark = true,
   className = "",
@@ -79,11 +79,11 @@ export function ZalaltorLogo({
   className?: string;
 }) {
   return (
-    <span className={`group inline-flex items-center gap-2.5 ${className}`}>
+    <span className={`group inline-flex items-center gap-3 ${className}`}>
       <ZalaltorMark size={size} variant={variant} />
       {showWordmark && (
-        <span className="font-display text-lg font-semibold tracking-wide">
-          Zalaltor
+        <span className="font-display text-xl font-semibold tracking-[0.18em] text-primary">
+          Zalaltor Studio
         </span>
       )}
     </span>
