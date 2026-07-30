@@ -1,17 +1,13 @@
 import { motion } from "framer-motion";
+import logoSrc from "@/assets/brand/zalaltor-logo.svg";
 
 type Variant = "mono" | "accent";
 
 /**
- * Zalaltor brand mark.
- *
- * Rebuilt from the uploaded logo as clean SVG so it renders crisp at any size,
- * inherits currentColor for the mono variant, and picks up the site's brand
- * gradient (--brand → --accent2) for the accent variant.
- *
- * The mark: a rounded circle field containing two tall rounded "1" pillars,
- * with the vertical wordmark "Zalaltor" set inside the left pillar — matching
- * the original identity while feeling native to the site's luxury aesthetic.
+ * Zalaltor brand mark — the actual studio logo (black disc, silver "Z",
+ * gold ascending stroke). Rendered as an image so it always matches the
+ * real identity, with a subtle gold glow and hover lift to feel native to
+ * the site's premium interactions.
  */
 export function ZalaltorMark({
   size = 32,
@@ -24,10 +20,7 @@ export function ZalaltorMark({
   className?: string;
   animated?: boolean;
 }) {
-  const gradId = `zalaltor-grad-${variant}`;
-  const useGradient = variant === "accent";
-
-  const Wrapper = animated ? motion.svg : "svg";
+  const Wrapper = animated ? motion.span : "span";
   const wrapperProps = animated
     ? {
         initial: { opacity: 0, scale: 0.9 },
@@ -39,75 +32,33 @@ export function ZalaltorMark({
 
   return (
     <Wrapper
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
-      width={size}
-      height={size}
-      className={className}
+      className={`relative inline-flex shrink-0 items-center justify-center rounded-full ${className}`}
+      style={{ width: size, height: size }}
       aria-label="Zalaltor"
       role="img"
       {...wrapperProps}
     >
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="var(--brand)" />
-          <stop offset="100%" stopColor="var(--accent2)" />
-        </linearGradient>
-        <radialGradient id={`${gradId}-glow`} cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0%" stopColor="var(--brand)" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="var(--brand)" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-
-      {/* Circular field */}
-      <circle cx="50" cy="50" r="48" fill="var(--ink)" />
-      {useGradient && (
-        <circle cx="50" cy="50" r="48" fill={`url(#${gradId}-glow)`} />
-      )}
-      <circle
-        cx="50"
-        cy="50"
-        r="47"
-        fill="none"
-        stroke={useGradient ? `url(#${gradId})` : "currentColor"}
-        strokeOpacity={useGradient ? 0.55 : 0.35}
-        strokeWidth="1"
-      />
-
-      {/* Left "1" pillar with vertical Zalaltor wordmark inside */}
-      <g>
-        <rect
-          x="30"
-          y="20"
-          width="14"
-          height="60"
-          rx="7"
-          fill={useGradient ? `url(#${gradId})` : "currentColor"}
+      {variant === "accent" && (
+        <span
+          className="pointer-events-none absolute -inset-1 rounded-full blur-md"
+          style={{
+            background:
+              "radial-gradient(circle, color-mix(in oklab, var(--brand) 45%, transparent) 0%, transparent 70%)",
+          }}
         />
-        <text
-          x="37"
-          y="50"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          transform="rotate(-90 37 50)"
-          fill="var(--ink)"
-          fontFamily="var(--font-display), system-ui, sans-serif"
-          fontSize="8"
-          fontWeight="700"
-          letterSpacing="0.5"
-        >
-          Zalaltor
-        </text>
-      </g>
-
-      {/* Right "1" pillar */}
-      <rect
-        x="56"
-        y="20"
-        width="14"
-        height="60"
-        rx="7"
-        fill={useGradient ? `url(#${gradId})` : "currentColor"}
+      )}
+      <img
+        src={logoSrc}
+        alt="Zalaltor Studio logo"
+        width={size}
+        height={size}
+        className="relative h-full w-full rounded-full object-cover"
+        style={{
+          boxShadow:
+            variant === "accent"
+              ? "0 0 0 1px color-mix(in oklab, var(--brand) 45%, transparent)"
+              : "0 0 0 1px color-mix(in oklab, var(--foreground) 20%, transparent)",
+        }}
       />
     </Wrapper>
   );
