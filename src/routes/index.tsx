@@ -35,7 +35,7 @@ export const Route = createFileRoute("/")({
           description:
             "Premium web design agency building high-converting websites, e-commerce, booking systems and AI automations.",
           email: "zalaltor121@gmail.com",
-          telephone: "+923705104014",
+          telephone: "+923139120755",
           areaServed: "Worldwide",
           slogan: "Where Vision Becomes Digital Reality.",
         }),
