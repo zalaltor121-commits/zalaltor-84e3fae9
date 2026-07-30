@@ -564,8 +564,8 @@ export function MobileMenuOverlay({
         >
           <div className="text-[11px] uppercase tracking-[0.3em]">Get in touch</div>
           <a href="mailto:zalaltor121@gmail.com" className="block truncate text-foreground/90 hover:text-foreground">zalaltor121@gmail.com</a>
-          <a href="tel:+923705104014" className="block text-foreground/80 hover:text-foreground">+92 370 5104014</a>
-          <a href="https://wa.me/923705104014" className="block text-foreground/80 hover:text-foreground">WhatsApp · +92 370 5104014</a>
+          <a href="tel:+923139120755" className="block text-foreground/80 hover:text-foreground">+92 313 9120755</a>
+          <a href="https://wa.me/923139120755" className="block text-foreground/80 hover:text-foreground">WhatsApp · +92 313 9120755</a>
         </motion.div>
       </motion.div>
     </motion.div>
@@ -1005,8 +1005,8 @@ export function Contact() {
 
                 <div className="mt-10 space-y-4">
                   <ContactLine icon={Mail} label="Email" value="zalaltor121@gmail.com" href="mailto:zalaltor121@gmail.com" />
-                  <ContactLine icon={Phone} label="Call" value="+92 370 5104014" href="tel:+923705104014" />
-                  <ContactLine icon={MessageCircle} label="WhatsApp" value="+92 370 5104014" href="https://wa.me/923705104014" />
+                  <ContactLine icon={Phone} label="Call" value="+92 313 9120755" href="tel:+923139120755" />
+                  <ContactLine icon={MessageCircle} label="WhatsApp" value="+92 313 9120755" href="https://wa.me/923139120755" />
                 </div>
               </Reveal>
             </div>
@@ -1151,7 +1151,7 @@ export function MultiStepLeadForm() {
               <p className="mt-3 max-w-sm text-sm text-muted-foreground">
                 We'll contact you shortly with next steps and ideas tailored to {data.business || "your business"}.
               </p>
-              <a href="https://wa.me/923705104014" className="btn-primary mt-6">
+              <a href="https://wa.me/923139120755" className="btn-primary mt-6">
                 Chat on WhatsApp <ArrowRight className="h-4 w-4" />
               </a>
             </motion.div>
@@ -1309,6 +1309,14 @@ export function Field({
 export function Footer() {
   return (
     <footer className="relative border-t border-white/5 py-12">
+      <figure className="mx-auto mb-10 max-w-3xl px-6 text-center">
+        <blockquote className="font-display text-xl italic leading-snug text-foreground/90 sm:text-2xl">
+          &ldquo;If I must fall, may it be from a high place.&rdquo;
+        </blockquote>
+        <figcaption className="mt-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+          &mdash; Paulo Coelho
+        </figcaption>
+      </figure>
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
         <div className="flex items-center gap-3">
           <ZalaltorMark size={36} variant="accent" animated={false} />
