@@ -13,7 +13,7 @@ import cramerImg from "@/assets/portfolio/cramer.png";
 import wrapImg from "@/assets/portfolio/wrapstation.png";
 import odeonImg from "@/assets/portfolio/odeon.png";
 import uppercutImg from "@/assets/portfolio/uppercut.png";
-import { ZalaltorLogo } from "@/components/ZalaltorLogo";
+import { ZalaltorLogo, ZalaltorMark } from "@/components/ZalaltorLogo";
 
 /* ============================================================
    PRIMITIVES
