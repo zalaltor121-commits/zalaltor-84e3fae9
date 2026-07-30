@@ -13,7 +13,7 @@ import cramerImg from "@/assets/portfolio/cramer.png";
 import wrapImg from "@/assets/portfolio/wrapstation.png";
 import odeonImg from "@/assets/portfolio/odeon.png";
 import uppercutImg from "@/assets/portfolio/uppercut.png";
-import { ZalaltorMark } from "@/components/ZalaltorLogo";
+import { ZalaltorLogo } from "@/components/ZalaltorLogo";
 
 /* ============================================================
    PRIMITIVES
@@ -402,6 +402,7 @@ export const TESTIMONIALS = [
   { name: "Priya K.", role: "Legal Partner", quote: "Professional, fast and creative. Our new site changed how clients perceive our firm." },
   { name: "Marco T.", role: "E-commerce Founder", quote: "The best agency experience I've had. Our storefront finally matches the quality of our products." },
   { name: "Ayesha M.", role: "Studio Owner", quote: "Zalaltor understood our vision immediately and elevated it. Bookings are up dramatically." },
+  { name: "Paulo Coelho", role: "Author", quote: "If I must fall, may it be from a high place." },
 ];
 
 /* ============================================================
@@ -446,10 +447,7 @@ export function Nav() {
       >
         <span className="relative inline-flex transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105">
           <span className="absolute inset-0 -z-10 rounded-full bg-[var(--brand)]/25 opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
-          <ZalaltorMark size={34} variant="accent" />
-        </span>
-        <span className="hidden font-display text-lg font-semibold tracking-wide sm:inline">
-          Zalaltor
+          <ZalaltorLogo size={36} variant="accent" />
         </span>
       </a>
       <nav className="hidden items-center gap-1 md:flex">
@@ -1008,8 +1006,7 @@ export function Contact() {
                 <div className="mt-10 space-y-4">
                   <ContactLine icon={Mail} label="Email" value="zalaltor121@gmail.com" href="mailto:zalaltor121@gmail.com" />
                   <ContactLine icon={Phone} label="Call" value="+92 370 5104014" href="tel:+923705104014" />
-                  <ContactLine icon={Phone} label="Call" value="+92 313 9120755" href="tel:+923139120755" />
-                  <ContactLine icon={MessageCircle} label="WhatsApp" value="+92 370 5104014" href="https://wa.me/923705104014" />
+                  <ContactLine icon={MessageCircle} label="WhatsApp" value="+92 313 9120755" href="https://wa.me/923139120755" />
                 </div>
               </Reveal>
             </div>
