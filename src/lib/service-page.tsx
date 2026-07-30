@@ -46,7 +46,7 @@ export function serviceHead(c: ServiceContent) {
             name: "Zalaltor",
             url: BASE,
             email: "zalaltor121@gmail.com",
-            telephone: "+923705104014",
+            telephone: "+923139120755",
           },
           url,
         }),
@@ -124,7 +124,7 @@ export function ServicePage({ content }: { content: ServiceContent }) {
             Start your project <ArrowRight className="h-4 w-4" />
           </Link>
           <a
-            href="https://wa.me/923705104014"
+            href="https://wa.me/923139120755"
             className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-foreground/90 transition-colors hover:bg-white/5"
           >
             Chat on WhatsApp
