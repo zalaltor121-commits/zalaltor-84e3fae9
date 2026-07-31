@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: "/" },
       { name: "twitter:title", content: "Zalaltor — Premium Web Agency" },
-      { name: "twitter:description", content: "Where Vision Becomes Digital Reality." },
+      { name: "twitter:description", content: "Build. Grow. Succeed." },
     ],
     links: [{ rel: "canonical", href: "/" }],
     scripts: [
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
           email: "zalaltor121@gmail.com",
           telephone: "+923139120755",
           areaServed: "Worldwide",
-          slogan: "Where Vision Becomes Digital Reality.",
+          slogan: "Build. Grow. Succeed.",
         }),
       },
     ],
