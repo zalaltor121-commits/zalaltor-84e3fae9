@@ -592,7 +592,7 @@ export function Hero() {
           className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground backdrop-blur"
         >
           <Sparkles className="h-3.5 w-3.5 text-[var(--brand)]" />
-          Where Vision Becomes Digital Reality
+          Build. Grow. Succeed
         </motion.div>
 
         <h1 className="text-gradient font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl lg:text-[5.5rem]">
@@ -1322,7 +1322,7 @@ export function Footer() {
           <ZalaltorMark size={36} variant="accent" animated={false} />
           <div>
             <div className="font-display text-sm font-semibold">Zalaltor</div>
-            <div className="text-[11px] text-muted-foreground">Where Vision Becomes Digital Reality.</div>
+            <div className="text-[11px] text-muted-foreground">Build. Grow. Succeed.</div>
           </div>
         </div>
         <div className="text-center text-xs text-muted-foreground md:text-right">
