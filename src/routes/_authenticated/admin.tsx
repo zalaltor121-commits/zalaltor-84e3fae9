@@ -28,6 +28,7 @@ import {
   YAxis,
 } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
+import { isTrustedDevice, lockAdminDevice } from "@/lib/admin-gate";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -104,35 +105,14 @@ function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data: userData, error: userError } = await supabase.auth.getUser();
-        if (userError || !userData.user) {
-          setAccess("denied");
-          setLoading(false);
-          return;
-        }
-        setEmail(userData.user.email ?? null);
-        const { data: roles, error: roleError } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", userData.user.id);
-        if (roleError) {
-          setError(roleError.message);
-          setAccess("denied");
-          setLoading(false);
-          return;
-        }
-        const admin = (roles ?? []).some((r: { role: string }) => r.role === "admin");
-        setAccess(admin ? "granted" : "denied");
-        if (admin) await load();
-        else setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Could not load the dashboard.");
-        setAccess("denied");
-        setLoading(false);
-      }
-    })();
+    if (!isTrustedDevice()) {
+      setAccess("denied");
+      setLoading(false);
+      return;
+    }
+    setAccess("granted");
+    setEmail("Owner");
+    void load();
   }, [load]);
 
   async function updateStatus(id: string, status: string) {
@@ -158,8 +138,13 @@ function AdminDashboard() {
   }
 
   async function signOut() {
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", replace: true });
+    lockAdminDevice();
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      /* no session needed for the local gate */
+    }
+    navigate({ to: "/", replace: true });
   }
 
   const selected = leads.find((l) => l.id === selectedId) ?? null;
