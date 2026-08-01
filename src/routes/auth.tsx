@@ -6,15 +6,18 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Admin sign in — Zalaltor" },
-      { name: "description", content: "Sign in to the Zalaltor admin dashboard." },
+      { name: "description", content: "Sign in or create the Zalaltor admin account." },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
   component: AuthPage,
 });
 
+type Mode = "signin" | "signup";
+
 function AuthPage() {
   const navigate = useNavigate();
+  const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,6 +34,25 @@ function AuthPage() {
     setLoading(true);
     setMessage(null);
     try {
+      if (mode === "signup") {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: `${window.location.origin}/auth` },
+        });
+        if (error) throw error;
+        if (data.session) {
+          navigate({ to: "/admin" });
+          return;
+        }
+        setMessage({
+          type: "info",
+          text: "Account created. Check your inbox for the confirmation link, then sign in.",
+        });
+        setMode("signin");
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       navigate({ to: "/admin" });
@@ -48,11 +70,40 @@ function AuthPage() {
           ← Back to site
         </Link>
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur">
+          <div className="mb-6 flex rounded-xl border border-white/10 bg-white/5 p-1 text-sm">
+            <button
+              type="button"
+              onClick={() => {
+                setMode("signin");
+                setMessage(null);
+              }}
+              className={`flex-1 rounded-lg px-3 py-2 transition ${
+                mode === "signin" ? "bg-white/10 text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              Sign in
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode("signup");
+                setMessage(null);
+              }}
+              className={`flex-1 rounded-lg px-3 py-2 transition ${
+                mode === "signup" ? "bg-white/10 text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              Create account
+            </button>
+          </div>
+
           <h1 className="font-display text-2xl font-semibold tracking-tight">
-            Admin sign in
+            {mode === "signin" ? "Admin sign in" : "Create admin account"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Access the Zalaltor lead dashboard.
+            {mode === "signin"
+              ? "Access the Zalaltor lead dashboard."
+              : "The first account created becomes the admin."}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -79,7 +130,7 @@ function AuthPage() {
                 type="password"
                 required
                 minLength={8}
-                autoComplete="current-password"
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-base outline-none transition focus:border-[var(--brand)]/60 focus:bg-white/10"
@@ -103,7 +154,7 @@ function AuthPage() {
               disabled={loading}
               className="btn-primary w-full justify-center disabled:opacity-60"
             >
-              {loading ? "Please wait…" : "Sign in"}
+              {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
             </button>
           </form>
         </div>
