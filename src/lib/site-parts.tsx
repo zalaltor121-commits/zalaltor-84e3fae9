@@ -11,7 +11,7 @@ import {
 import turnerImg from "@/assets/portfolio/turner.png";
 import cramerImg from "@/assets/portfolio/cramer.png";
 import wrapImg from "@/assets/portfolio/wrapstation.png";
-import odeonImg from "@/assets/portfolio/odeon.png";
+import afzalImg from "@/assets/portfolio/afzal.jpg";
 import uppercutImg from "@/assets/portfolio/uppercut.png";
 import { ZalaltorLogo, ZalaltorMark } from "@/components/ZalaltorLogo";
 
@@ -348,14 +348,14 @@ export const PROJECTS: Project[] = [
     image: wrapImg,
   },
   {
-    name: "Odeon Vapes",
-    industry: "Retail — Islamabad",
+    name: "Style by Afzal",
+    industry: "Barbershop — Islamabad",
     description:
-      "A neon-glass storefront with product showcases, flavor library and a one-tap call-to-store lead flow.",
-    features: ["Product Showcase", "Flavor Library", "Store Locator", "Click-to-Call"],
-    tech: ["React", "TypeScript", "Tailwind", "Motion"],
-    url: "https://lighthearted-pithivier-d9f887.netlify.app/",
-    image: odeonImg,
+      "An editorial newspaper-style barbershop brand with live deals, membership tiers and a frictionless online booking flow.",
+    features: ["Online Booking", "Deals & Offers", "Membership Plans", "Editorial Design"],
+    tech: ["React", "TypeScript", "Tailwind", "Framer Motion"],
+    url: "https://style-by-afzal.vercel.app/",
+    image: afzalImg,
   },
   {
     name: "The UpperCut Barber",
